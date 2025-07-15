@@ -12,14 +12,14 @@ const helmet = require('helmet');
 app.use(cors());
 app.use(helmet());
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000;
 
-// ✅ Root route just to check server running
+
 app.get('/', (req, res) => {
   res.send('Welcome to the User API!');
 });
 
-// 👨‍🎓 Add a user
+
 app.post('/users', async (req, res) => {
   try {
     const user = new User(req.body);
@@ -31,7 +31,7 @@ app.post('/users', async (req, res) => {
   }
 });
 
-// 📚 Get all users
+
 app.get('/users', async (req, res) => {
   try {
     const users = await User.find();

@@ -1,47 +1,20 @@
 const express = require('express');
 require('dotenv').config();
-const db = require('./db');
-const User = require('./models/User');
+const mongoose = require('mongoose');
+const userRouter = require('./routes/userroutes')
+const productRouter = require('./routes/productroutes')
+const path = require('path');
+
+
 
 const app = express();
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use(express.json());
+app.use("/user",userRouter);
+app.use('/product', productRouter);
 
-const cors = require('cors');
-const helmet = require('helmet');
+mongoose.connect(process.env.MONGO_URL).then(()=>{console.log("MongoDB Connected")}).catch((err)=>{console.log("Connection Error : ",err)});
 
-app.use(cors());
-app.use(helmet());
-
-const PORT = process.env.PORT || 5000;
-
-
-app.get('/', (req, res) => {
-  res.send('Welcome to the User API!');
-});
-
-
-app.post('/users', async (req, res) => {
-  try {
-    const user = new User(req.body);
-    await user.save();
-    res.status(201).json({ message: 'User created successfully', user });
-  } catch (error) {
-    console.error('❌ Error creating user:', error.message);
-    res.status(400).json({ error: 'Could not create user', details: error.message });
-  }
-});
-
-
-app.get('/users', async (req, res) => {
-  try {
-    const users = await User.find();
-    res.json(users);
-  } catch (error) {
-    console.error('❌ Error fetching users:', error.message);
-    res.status(500).json({ error: 'Could not fetch users' });
-  }
-});
-
-app.listen(PORT, () => {
-  console.log(`🚀 Server is running on port ${PORT}`);
+app.listen(process.env.PORT, () => {
+  console.log(`Server is running on port ${process.env.PORT}`);
 });

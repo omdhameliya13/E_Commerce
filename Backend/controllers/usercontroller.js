@@ -44,7 +44,8 @@ const createuser = async(req,res)=>{
                 name,
                 email,
                 password:hashed,
-                role
+                role:"user",
+                BusinessRole
             }
         );
         return res.status(201).json({message:"User registered successfully",newuser});
@@ -74,7 +75,8 @@ const googleLogin = async(req,res)=>{
             {
                 name,
                 email,
-                role
+                role:'googleUser',
+                BusinessRole
             }
         );
 

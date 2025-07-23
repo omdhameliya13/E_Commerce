@@ -1,9 +1,9 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Home from './Component/Home';
-import Login from './Component/Login';
-import Signup from './Component/Signup';
-import Dashboard from './Component/Dashboard';
+import Home from './components/Home'
+import Login from './Components/Login';
+import Signup from './Components/Signup';
+import Dashboard from './Components/Dashboard';
 import PrivateRoute from './utils/PrivateRoute';
 import { Toaster } from 'react-hot-toast';
 

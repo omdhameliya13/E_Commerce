@@ -1,11 +1,23 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Home from './Component/Home';
+import Login from './Component/Login';
+import Signup from './Component/Signup';
+import Dashboard from './Component/Dashboard';
+import PrivateRoute from './utils/PrivateRoute';
+import { Toaster } from 'react-hot-toast';
 
 function App() {
   return (
-    <div className="App">
-      <h1>HELLO GROUP 3</h1>
-    </div>
+    <Router>
+      <Toaster position="top-center" reverseOrder={false} />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
+      </Routes>
+    </Router>
   );
 }
 

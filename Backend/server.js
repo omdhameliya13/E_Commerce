@@ -1,20 +1,19 @@
 const express = require('express');
-require('dotenv').config();
 const mongoose = require('mongoose');
-const userRouter = require('./routes/userroutes')
-const productRouter = require('./routes/productroutes')
-const path = require('path');
+require('dotenv').config();
 
+const app = express(); 
 
-
-const app = express();
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use(express.json());
-app.use("/user",userRouter);
-app.use('/product', productRouter);
 
-mongoose.connect(process.env.MONGO_URL).then(()=>{console.log("MongoDB Connected")}).catch((err)=>{console.log("Connection Error : ",err)});
-
+mongoose.connect(process.env.MONGO_URL)
+.then(()=>{
+  console.log("Mongo DB connected");
+})
+.catch((err)=>{
+  console.log("Error to Connect MongoDB",err.message);
+  process.exit(1);
+});
 app.listen(process.env.PORT, () => {
-  console.log(`Server is running on port ${process.env.PORT}`);
+  console.log(` Server is running on port ${process.env.PORT}`);
 });

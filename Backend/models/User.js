@@ -24,7 +24,8 @@ const UserSchema = new mongoose.Schema({
     required:true,
     enum:["user","admin","artist"]
   }
-},{  timestamps:true});
+});
+
 
 const User = mongoose.model('User', UserSchema);
 

@@ -32,7 +32,8 @@ const getUser = async(req,res)=>{
 
 const createuser = async(req,res)=>{
     try{
-        const {name,email,password,role} = req.body;
+        console.log("hyyy");
+        const {name,email,password,BusinessRole} = req.body;
         const user = await User.findOne({email});
         if(user)
         {

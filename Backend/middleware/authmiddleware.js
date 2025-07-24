@@ -15,10 +15,10 @@ const protect = (req,res,next)=>{
     }
 }
 
-const authorize = (...role)=>{
+const authorize = (...BusinessRole)=>{
     return(req,res,next)=>{
-        if(!req.user.role){
-            return res.status(401).json({message:`User role ${req.user.role} not authorized`});
+        if(!req.user.BusinessRoleusinessRole){
+            return res.status(401).json({message:`User role ${req.user.BusinessRole} not authorized`});
         }
         next();
     }

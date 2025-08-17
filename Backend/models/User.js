@@ -22,7 +22,7 @@ const UserSchema = new mongoose.Schema({
   BusinessRole:{
     type:String,
     required:true,
-    enum:["user","admin","artist"]
+    enum:["user","artist"]
   }
 });
 

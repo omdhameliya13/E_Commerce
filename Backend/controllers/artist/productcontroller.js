@@ -1,6 +1,6 @@
 const express = require('express');
 const multer = require('multer');
-const Product = require('../models/product');
+const Product = require('../../models/product');
 
 const addproduct = async(req,res)=>{
     try {

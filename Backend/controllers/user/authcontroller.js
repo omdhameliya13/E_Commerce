@@ -1,8 +1,8 @@
 const express = require('express');
 const app = express();
 app.use(express.json());
-const User = require('../models/user')
-const GoogleUser = require('../models/googleUser')
+const User = require('../../models/user')
+const GoogleUser = require('../../models/googleUser')
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { OAuth2Client } = require('google-auth-library');
@@ -45,7 +45,7 @@ const createuser = async(req,res)=>{
                 email,
                 password:hashed,
                 role:"user",
-                BusinessRole
+                BusinessRole:"user"
             }
         );
         return res.status(201).json({message:"User registered successfully",newuser});

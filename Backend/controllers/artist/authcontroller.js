@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 app.use(express.json());
-const User = require('../../models/user')
+const Artist = require('../../models/artist')
 const GoogleUser = require('../../models/googleUser')
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
@@ -10,17 +10,17 @@ const { OAuth2Client } = require('google-auth-library');
 const getUser = async(req,res)=>{
     try{
             const {email,password} = req.body;
-            const user = await User.findOne({email});
-            if(!user)
+            const artist = await Artist.findOne({email});
+            if(!artist)
             {
-                return res.status(404).json({message:"User does not exist"});
+                return res.status(404).json({message:"Artist does not exist"});
             }
-            const match = await bcrypt.compare(password,user.password);
+            const match = await bcrypt.compare(password,artist.password);
             if(!match)
             {
                 return res.status(400).json({message:"Incorrect password"});
             }
-            const token = jwt.sign({id:user._id},process.env.JWT_SECRET,{expiresIn:"2h"});
+            const token = jwt.sign({id:artist._id},process.env.JWT_SECRET,{expiresIn:"2h"});
             return res.status(200).json({message:"Logged in Successfully",token});
 
         }
@@ -32,14 +32,14 @@ const getUser = async(req,res)=>{
 
 const createuser = async(req,res)=>{
     try{
-        const {name,email,password,BusinessRole} = req.body;
-        const user = await User.findOne({email});
-        if(user)
+        const {name,email,password} = req.body;
+        const artist = await Artist.findOne({email});
+        if(artist)
         {
-            return res.status(400).json({message:"User is already exist!"});
+            return res.status(400).json({message:"Artist is already exist!"});
         }
         const hashed = await bcrypt.hash(password,10);
-        const newuser = await User.create(
+        const newartist = await Artist.create(
             {
                 name,
                 email,
@@ -48,7 +48,7 @@ const createuser = async(req,res)=>{
                 BusinessRole:"artist"
             }
         );
-        return res.status(201).json({message:"User registered successfully",newuser});
+        return res.status(201).json({message:"User registered successfully",newartist});
     }
     catch(error){
         console.log(error.message);
@@ -76,7 +76,7 @@ const googleLogin = async(req,res)=>{
                 name,
                 email,
                 role:'googleUser',
-                BusinessRole
+                BusinessRole:'artist'
             }
         );
 

@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const UserSchema = new mongoose.Schema({
+const ArtistSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true
@@ -22,7 +22,7 @@ const UserSchema = new mongoose.Schema({
   BusinessRole:{
     type:String,
     required:true,
-    enum:["user","artist","admin"]
+    enum:["artist"]
   },
   isverified:{
     type:Boolean,
@@ -31,6 +31,6 @@ const UserSchema = new mongoose.Schema({
 });
 
 
-const User = mongoose.model('User', UserSchema);
+const Artist = mongoose.model('Artist', ArtistSchema);
 
-module.exports = User;
+module.exports = Artist;

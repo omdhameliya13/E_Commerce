@@ -4,7 +4,7 @@ const Product = require('../../models/product');
 
 const addproduct = async(req,res)=>{
     try {
-        const { name, description, price } = req.body;
+        const { name, description,category, price,color,size,artistId } = req.body;
         const image = req.file ? req.file.filename : null;
 
         if (!name || !price) {
@@ -14,8 +14,12 @@ const addproduct = async(req,res)=>{
         const product = new Product({
             name,
             description,
+            category,
             price,
-            image
+            image,
+            color,
+            size,
+            artistId
         });
 
         await product.save();
@@ -61,9 +65,9 @@ const getproduct = async(req,res)=>{
 const updateproduct = async(req,res)=>{
     try{
         const id = req.params.id;
-        const {name,description,price} = req.body;
+        const {name, description,category, price,color,size} = req.body;
         const image = req.file ? req.file.filename : null;
-        const updateData = { name, description, price };
+        const updateData = { name, description,category, price,color,size };
         if (image) {
             updateData.image = image;
         }
@@ -80,4 +84,3 @@ const updateproduct = async(req,res)=>{
     }
 }
 module.exports = {addproduct,deleteproduct,getproduct,updateproduct};
-

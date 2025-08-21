@@ -32,16 +32,15 @@ const productSchema = new mongoose.Schema({
   size:{
     type:String
   },
-  status:{
-    type:String, 
-    default:"Pending",
-    enum:["Pending","Aproved","Reject"]
-  },
   artistId: { 
     type: mongoose.Schema.Types.ObjectId,
     ref: "Artist", 
     required: true 
   },
+  isapproved:{
+    type:Boolean,
+    default:false,
+  }
 });
 
 const product = mongoose.model("Product", productSchema);

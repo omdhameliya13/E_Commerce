@@ -1,11 +1,13 @@
 const express = require('express');
 const Router = express.Router();
-const userroutes = require("./user/authroutes");
-const artistroutes = require("./artist/authroutes");
-const adminroutes = require("./admin/authroutes");
+const userauthroutes = require("./user/authroutes");
+const artistauthroutes = require("./artist/authroutes");
+const adminauthroutes = require("./admin/authroutes");
+const manageArtistroutes = require("./admin/manegeartistroutes")
 
-Router.use("/user/auth",userroutes);
-Router.use("/artist/auth",artistroutes);
-Router.use("/admin/auth",adminroutes);
+Router.use("/user/auth",userauthroutes);
+Router.use("/artist/auth",artistauthroutes);
+Router.use("/admin/auth",adminauthroutes);
+Router.use("/admin/manageartist",manageArtistroutes);
 
 module.exports = Router;

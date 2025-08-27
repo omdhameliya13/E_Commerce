@@ -22,12 +22,8 @@ const UserSchema = new mongoose.Schema({
   BusinessRole:{
     type:String,
     required:true,
-    enum:["user","artist","admin"]
+    enum:["user","admin"]
   },
-  isverified:{
-    type:Boolean,
-    default:false,
-  }
 });
 
 

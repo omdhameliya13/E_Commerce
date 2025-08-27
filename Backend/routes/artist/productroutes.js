@@ -1,6 +1,7 @@
 const express = require('express');
 const multer = require('multer');
 const product = require('../../controllers/artist/productcontroller');
+const {protect} = require('../../middleware/authmiddleware');
 
 
 const router = express.Router();
@@ -15,9 +16,9 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
-router.post('/addProduct', upload.single('image'), product.addproduct);
-router.get('/getProduct/:id',product.getproduct);
-router.delete('/deleteProduct/:id',product.deleteproduct);
-router.put('/updateProduct/:id',upload.single('image'),product.updateproduct);
+router.post('/addProduct',protect, upload.single('image'), product.addproduct);
+router.get('/getProduct/:id',protect,product.getproduct);
+router.delete('/deleteProduct/:id',protect,product.deleteproduct);
+router.put('/updateProduct/:id',protect,upload.single('image'),product.updateproduct);
 
 module.exports = router;

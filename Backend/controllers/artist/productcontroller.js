@@ -4,9 +4,9 @@ const Product = require('../../models/product');
 
 const addproduct = async(req,res)=>{
     try {
-        const { name, description,category, price,color,size,artistId } = req.body;
+        const { name, description,category, price,color,size } = req.body;
         const image = req.file ? req.file.filename : null;
-
+        const artistId = req.user.id;
         if (!name || !price) {
             return res.status(400).json({ message: 'Name and price are required' });
         }
@@ -66,10 +66,9 @@ const updateproduct = async(req,res)=>{
     try{
         const id = req.params.id;
         const {name, description,category, price,color,size} = req.body;
-        const image = req.file ? req.file.filename : null;
         const updateData = { name, description,category, price,color,size };
-        if (image) {
-            updateData.image = image;
+        if (req.file) {
+            updateData.image = req.file.filename;
         }
         const updateproduct = await Product.findByIdAndUpdate(id,updateData,{new:true});
         if(!updateproduct)

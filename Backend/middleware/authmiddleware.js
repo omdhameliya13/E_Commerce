@@ -7,6 +7,7 @@ const protect = (req,res,next)=>{
             return res.status(401).json({message:"Not authorized"});
         }
         const decoded = jwt.verify(token,process.env.JWT_SECRET);
+        req.user = decoded;
         next();
     }
     catch(err)
@@ -15,7 +16,7 @@ const protect = (req,res,next)=>{
     }
 }
 
-const authorize = (...BusinessRole)=>{
+/*const authorize = (...BusinessRole)=>{
     return(req,res,next)=>{
         if(!req.user.BusinessRoleusinessRole){
             return res.status(401).json({message:`User role ${req.user.BusinessRole} not authorized`});
@@ -23,6 +24,6 @@ const authorize = (...BusinessRole)=>{
         next();
     }
 
-}
+}*/
 
-module.exports = {protect,authorize};
+module.exports = {protect};

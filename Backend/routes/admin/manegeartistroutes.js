@@ -1,10 +1,11 @@
 const express = require('express');
 const Router = express.Router();
 const manageArtist = require('../../controllers/admin/manageartistcontroller')
+const {protect} = require('../../middleware/authmiddleware');
 
-Router.get("/getAllArtist",manageArtist.getAllArtist);
-Router.get("/getUnVerifiedArtist",manageArtist.getUnVerifiedArtist);
-Router.put("/verifyArtist/:id",manageArtist.verifyArtist);
-Router.put("/rejectArtist",manageArtist.rejectArtist);
+Router.get("/getAllArtist",protect,manageArtist.getAllArtist);
+Router.get("/getUnVerifiedArtist",protect,manageArtist.getUnVerifiedArtist);
+Router.put("/verifyArtist/:id",protect,manageArtist.verifyArtist);
+Router.put("/rejectArtist",protect,manageArtist.rejectArtist);
 
 module.exports = Router

@@ -26,11 +26,12 @@ app.use('/api/v1',indexroutes);
 mongoose.connect(process.env.MONGO_URL)
 .then(()=>{
   console.log("Mongo DB connected");
+  app.listen(process.env.PORT, () => {
+  console.log(`Server is running on port ${process.env.PORT}`);
+});
 })
 .catch((err)=>{
   console.log("Error to Connect MongoDB",err.message);
   process.exit(1);
 });
-app.listen(process.env.PORT, () => {
-  console.log(`Server is running on port ${process.env.PORT}`);
-});
+

@@ -26,9 +26,36 @@ const orederSchema = new mongoose.Schema({
         enum: ["Pending", "Processing", "Shipped", "Delivered", "Cancelled"],
         default: "Pending"
     },
-    address: {
-        type: String,
-        required: true
+    fullname:{
+        type:String,
+        required:true
+    },
+    mobileno:{
+        type:String,
+        required:true
+    },
+    flat_houseno:{
+        type:String,
+        required:true
+    },
+    area:{
+        type:String,
+        required:true
+    },
+    landmark:{
+        type:String
+    },
+    pincode:{
+        type:String,
+        required:true
+    },
+    city:{
+        type:String,
+        required:true
+    },
+    state:{
+        type:String,
+        required:true
     },
     paymentMethod: {
         type: String,
@@ -43,4 +70,4 @@ const orederSchema = new mongoose.Schema({
 
 const Order = mongoose.model("Order",orederSchema);
 
-module.exports = {Order};
+module.exports = Order;

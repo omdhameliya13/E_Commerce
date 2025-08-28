@@ -10,10 +10,12 @@ const cartroutes = require('./user/cartroutes');
 const adminprofileroutes = require("./admin/profileroutes");
 const artistprofileroutes = require("./artist/profileroutes");
 const userprofileroutes = require("./user/profileroutes")
+const userOrderroutes = require("./user/orderroutes")
 
 Router.use("/user/auth",userauthroutes);
 Router.use("/user/profile",userprofileroutes);
 Router.use("/user/cart",cartroutes);
+Router.use("/user/order",userOrderroutes);
 
 Router.use("/artist/auth",artistauthroutes);
 Router.use("/artist/product",productroutes);

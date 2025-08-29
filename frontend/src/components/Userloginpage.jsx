@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from "react-router-dom";
 
 const Userloginpage = () => {
     return(
@@ -30,22 +31,36 @@ const Userloginpage = () => {
         </div>
 
         <div className="flex justify-end mb-6">
-          <a href="#" className="text-blue-500 hover:underline text-sm">
+          <Link to="#" className="text-blue-500 hover:underline text-sm">
             Forgot password?
-          </a>
+          </Link>
         </div>
-
+        <Link to="/">
         <button className="w-full bg-blue-500 text-white py-3 rounded-lg hover:bg-blue-600 transition duration-300">
-          Login
+          Login as User
         </button>
-
-        
+        </Link>
         <p className="text-center text-gray-500 text-sm mt-6">
           Not registered yet?{" "}
-          <a href="#" className="text-blue-500 hover:underline font-medium">
-            Create an account
-          </a>
+          <Link to="/register-user" className="text-blue-500 hover:underline font-medium">
+            Register as User
+          </Link><br />
+          <Link to="/register-artist" className="text-blue-500 hover:underline font-medium">
+            Register as Artist
+          </Link>
         </p>
+
+        <div className="my-4 flex items-center gap-2">
+          <div className="h-px flex-1 bg-gray-400" />
+          <span className="text-xs text-gray-500">OR</span>
+          <div className="h-px flex-1 bg-gray-400" />
+        </div>
+
+        <div className='text-center'>
+          <Link to="/login-artist" className="text-blue-500 hover:underline font-medium">
+            Login as Artist
+          </Link>
+        </div>
       </div>
     </div>
         </div>

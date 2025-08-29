@@ -1,7 +1,28 @@
-import React from 'react';
-import { Link } from "react-router-dom";
+import React,{useState} from 'react';
+import {useNavigate, Link } from "react-router-dom";
+import axios from 'axios';
+import toast from 'react-hot-toast';
+
 
 const Userregisterpage = () => {
+    const [formData, setFormData] = useState({ name: '', email: '', password: '' });
+    const navigate = useNavigate();
+
+    const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+            if (!formData.name || !formData.email || !formData.password) {
+            return toast.error('All fields are required');
+        }
+        try {
+            const res = await axios.post('http://localhost:5000/users', formData);
+            toast.success(res.data.message);
+            navigate('/login');
+        } catch (err) {
+            toast.error(err.response?.data?.error || 'Signup failed');
+        }
+    }
     return(
         <div>
             <div className='flex justify-center p-16'>
@@ -10,10 +31,10 @@ const Userregisterpage = () => {
                 <div className='flex justify-center items-center'>
                     <div className='flex w-[1000px] h-[500px] bg-white rounded-xl shadow-lg overflow-hidden'>
                         <div className='w-1/2  flex justify-center items-center'>
-                            <form action="#" className='w-[330px]'>
-                                <input type="text" placeholder="Name" className="w-full rounded-xl border border-gray-300 bg-white px-3 py-2 text-gray-900 placeholder-gray-400 shadow-sm focus:border-black focus:outline-none focus:ring-2 focus:ring-black/5" required/><br/><br/>
-                                <input type="email" placeholder="Email" className="w-full rounded-xl border border-gray-300 bg-white px-3 py-2 text-gray-900 placeholder-gray-400 shadow-sm focus:border-black focus:outline-none focus:ring-2 focus:ring-black/5" required/><br /><br />
-                                <input type="password" placeholder="Password" className="w-full rounded-xl border border-gray-300 bg-white px-2 py-2 text-gray-900 placeholder-gray-400 shadow-sm focus:border-black focus:outline-none focus:ring-2 focus:ring-black/5" required/><br /><br />
+                            <form action="#" className='w-[330px]' onSubmit={handleSubmit}>
+                                <input type="text" placeholder="Name" onChange={handleChange} className="w-full rounded-xl border border-gray-300 bg-white px-3 py-2 text-gray-900 placeholder-gray-400 shadow-sm focus:border-black focus:outline-none focus:ring-2 focus:ring-black/5" required/><br/><br/>
+                                <input type="email" placeholder="Email" onChange={handleChange} className="w-full rounded-xl border border-gray-300 bg-white px-3 py-2 text-gray-900 placeholder-gray-400 shadow-sm focus:border-black focus:outline-none focus:ring-2 focus:ring-black/5" required/><br /><br />
+                                <input type="password" placeholder="Password" onChange={handleChange} className="w-full rounded-xl border border-gray-300 bg-white px-2 py-2 text-gray-900 placeholder-gray-400 shadow-sm focus:border-black focus:outline-none focus:ring-2 focus:ring-black/5" required/><br /><br />
                                 <Link to="/login-user">
                                 <button type="submit" className="w-full rounded-xl bg-blue-400 text-white py-2.5 font-medium shadow-md hover:bg-blue-500">
                                     Sign up

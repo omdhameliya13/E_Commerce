@@ -37,16 +37,13 @@ const Userloginpage = () => {
         </div>
         <Link to="/">
         <button className="w-full bg-blue-500 text-white py-3 rounded-lg hover:bg-blue-600 transition duration-300">
-          Login as User
+          Login
         </button>
         </Link>
         <p className="text-center text-gray-500 text-sm mt-6">
           Not registered yet?{" "}
           <Link to="/register-user" className="text-blue-500 hover:underline font-medium">
             Register as User
-          </Link><br />
-          <Link to="/register-artist" className="text-blue-500 hover:underline font-medium">
-            Register as Artist
           </Link>
         </p>
 

@@ -37,20 +37,10 @@ const Homeuser = () => {
                   </button>
                   </Link>
                 </div>
-              <div> 
-                <ion-icon name="person-outline" className='p-1'></ion-icon>
-              </div>
-              <div className='flex p-1'>
-              <div className=' '>
+              <div className='flex p-1 px-12'>
                 <button>
-                <ion-icon name="heart" className='p-1'></ion-icon>
+                <ion-icon name="cart" className='p-1 text-2xl'></ion-icon>
                 </button>
-              </div>
-              <div className='right-30'>
-                <button>
-                <ion-icon name="cart" className='p-1'></ion-icon>
-                </button>
-              </div>
             </div>
             </div>
         </div>

@@ -35,9 +35,9 @@ const Artistloginpage = () => {
             Forgot password?
           </a>
         </div>
-        <Link to="/artist">
+        <Link to="/artistdashboard">
         <button className="w-full bg-blue-500 text-white py-3 rounded-lg hover:bg-blue-600 transition duration-300">
-          Login as Artist
+          Login
         </button>
         </Link>
         

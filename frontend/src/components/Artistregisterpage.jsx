@@ -1,6 +1,7 @@
 import React from 'react';
+import { Link } from "react-router-dom";
 
-const Userregisterpage = () => {
+const Artistregisterpage = () => {
     return(
         <div>
             <div className='flex justify-center p-16'>
@@ -19,9 +20,9 @@ const Userregisterpage = () => {
 
                                 <p className="mt-4 text-center text-sm text-gray-600">
                                     Already have an account?{' '}
-                                    <a href="#" className="font-medium text-gray-900 underline underline-offset-4 hover:no-underline">
+                                    <Link to="/login-artist" className="font-medium text-gray-900 underline underline-offset-4 hover:no-underline">
                                         Login
-                                    </a>
+                                    </Link>
                                 </p>
 
                                 <div className="my-4 flex items-center gap-2">
@@ -61,4 +62,4 @@ function GoogleIcon({ className = "" }) {
     );
 }
 
-export default Userregisterpage;
+export default Artistregisterpage;

@@ -1,6 +1,7 @@
 import React from 'react';
+import { Link } from "react-router-dom";
 
-const Userloginpage = () => {
+const Artistloginpage = () => {
     return(
         <div>
             <div className="min-h-screen flex items-center justify-center bg-slate-950">
@@ -34,17 +35,17 @@ const Userloginpage = () => {
             Forgot password?
           </a>
         </div>
-
+        <Link to="/artist">
         <button className="w-full bg-blue-500 text-white py-3 rounded-lg hover:bg-blue-600 transition duration-300">
           Login as Artist
         </button>
-
+        </Link>
         
         <p className="text-center text-gray-500 text-sm mt-6">
           Not registered yet?{" "}
-          <a href="#" className="text-blue-500 hover:underline font-medium">
-            Register now!
-          </a>
+          <Link to="/register-artist" className="text-blue-500 hover:underline font-medium">
+            Register now as Artist!
+          </Link>
         </p>
       </div>
     </div>
@@ -53,4 +54,4 @@ const Userloginpage = () => {
 };
 
 
-export default Userloginpage;
+export default Artistloginpage;

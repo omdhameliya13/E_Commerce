@@ -1,8 +1,8 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './components/Home'
-import Login from './Components/Login';
-import Signup from './Components/Signup';
+//import Login from './Components/Login';
+//import Signup from './Components/Signup';
 import Dashboard from './Components/Dashboard';
 import PrivateRoute from './utils/PrivateRoute';
 import Homeuser from './components/Homeuser';
@@ -26,7 +26,7 @@ function App() {
     </Router>*/
     <Router>
       <Routes>
-        <Route path="/" element={<Artist/>} />
+        <Route path="/" element={<Userregisterpage/>} />
       </Routes>
     </Router>
   );

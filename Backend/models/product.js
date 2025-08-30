@@ -21,9 +21,8 @@ const productSchema = new mongoose.Schema({
       type: String,
       required:true
   },
-  countInStock: {
-      type: Boolean,
-      default: true,
+  stock: {
+    type: Number,
   },
   color:{
     type:String

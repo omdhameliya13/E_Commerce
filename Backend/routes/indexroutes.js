@@ -11,15 +11,19 @@ const adminprofileroutes = require("./admin/profileroutes");
 const artistprofileroutes = require("./artist/profileroutes");
 const userprofileroutes = require("./user/profileroutes")
 const userOrderroutes = require("./user/orderroutes")
+const userproductroutes = require("./user/productroutes");
+const artistorderroutes = require("./artist/orderroutes");
 
 Router.use("/user/auth",userauthroutes);
 Router.use("/user/profile",userprofileroutes);
 Router.use("/user/cart",cartroutes);
 Router.use("/user/order",userOrderroutes);
+Router.use("/user/product",userproductroutes);
 
 Router.use("/artist/auth",artistauthroutes);
 Router.use("/artist/product",productroutes);
 Router.use("/artist/profile",artistprofileroutes);
+Router.use("/artist/orders",artistorderroutes);
 
 Router.use("/admin/auth",adminauthroutes);
 Router.use("/admin/manageArtist",manageArtistroutes);

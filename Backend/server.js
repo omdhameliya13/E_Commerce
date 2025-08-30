@@ -7,6 +7,7 @@ const indexroutes = require('./routes/indexroutes');
 
 const app = express(); 
 app.use(express.json());
+app.use("/uploads", express.static("uploads"));
 app.use(
   cors({
     origin: [
@@ -15,7 +16,7 @@ app.use(
       process.env.CLIENT_URL,
     ],
     methods: ["GET", "POST", "DELETE", "PUT"],
-    credentials: true,
+    credentials: true,
   })
 );
 

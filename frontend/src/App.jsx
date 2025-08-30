@@ -30,6 +30,7 @@ function App() {
         <Route path="/register-artist" element={<Artistregisterpage />} />
         <Route path="/login-artist" element={<Artistloginpage />} />
         <Route path="/artist" element={<Artist />} />
+        <Route path="/artistupdate/:id" element={<ArtistUpdate />} />
         <Route path="/artistdashboard" element={<Artistdashboard />} />
         <Route path="/allorders" element={<AllOrders />} />
 

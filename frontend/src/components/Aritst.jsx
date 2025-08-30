@@ -50,6 +50,7 @@ const Artist = () => {
 
             {/* Category */}
             <div>
+<<<<<<< HEAD
               <label className="block text-gray-700 font-medium">Category</label>
               <select
                 className="w-full mt-1 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
@@ -60,6 +61,16 @@ const Artist = () => {
                 <option value="Adidas">Adidas</option>
                 <option value="Puma">Puma</option>
               </select>
+=======
+                <label className="block text-gray-700 font-medium">Category</label>
+                    <select className="w-full mt-1 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" required>
+                        <option value="Painting">Painting</option>
+                        <option value="Candles">Candles</option>
+                        <option value="Lamps">Lamps</option>
+                        <option value="Art">Art</option>
+                        <option value="Flowers">Flowers</option>
+                    </select>
+>>>>>>> f5ee3db5da4427e14606ac85e92aa86a0b7e2ac4
             </div>
 
             {/* Price */}

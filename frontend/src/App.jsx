@@ -8,7 +8,12 @@ import Userloginpage from './components/Userloginpage';
 import Artistloginpage from './components/Artistloginpage';
 import Artist from './components/Aritst';
 import Artistdashboard from './components/Artistdashboard';
-import AllOrders from './components/Allorders'
+import AllOrders from './components/Allorders';
+import Admindashboard from './components/Admindashboard';
+import Adminlogin from './components/Adminlogin';
+import Adminsignup from './components/Adminsignup';
+import Pendingorders from './components/Pendingorders';
+import Completeorders from './components/Completeorders'
 
 function App() {
   return (
@@ -27,6 +32,15 @@ function App() {
         <Route path="/artist" element={<Artist />} />
         <Route path="/artistdashboard" element={<Artistdashboard />} />
         <Route path="/allorders" element={<AllOrders />} />
+
+        {/* Admin */}
+        <Route path="/admindashboard" element={<Admindashboard/>} />
+        <Route path="/adminlogin" element={<Adminlogin/>} />
+        <Route path="/adminsignup" element={<Adminsignup/>} />
+
+        {/* Orders */}
+        <Route path="/pendingorders" element={<Pendingorders/>} />
+        <Route path="/completeorders" element={<Completeorders/>} />
       </Routes>
     </Router>
   );

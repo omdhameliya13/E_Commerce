@@ -78,31 +78,113 @@ const Homeuser = () => {
       </div>
 
       <div className='p-8'>
-        <h1 className='text-2xl text-center font-bold border-4 border-solid border-black p-3'>Top Trends</h1>
+  <h1 className='text-2xl text-center font-bold border-4 border-solid border-black p-3'>Top Trends</h1>
+</div>
+
+<div className='p-14'>
+  <Slider {...settings}>
+    {[
+      {
+        img: "photos/nike.jpg",
+        name: "Nike Air Zoom",
+        price: "₹2500",
+        desc: "High-quality running shoes for maximum comfort."
+      },
+      {
+        img: "https://via.placeholder.com/200x150.png?text=Adidas+Ultraboost",
+        name: "Adidas Ultraboost",
+        price: "₹3000",
+        desc: "Stylish sneakers designed for speed and comfort."
+      },
+      {
+        img: "https://via.placeholder.com/200x150.png?text=Puma+Future+Rider",
+        name: "Puma Future Rider",
+        price: "₹2200",
+        desc: "Classic retro sneakers with modern design."
+      },
+      {
+        img: "https://via.placeholder.com/200x150.png?text=Reebok+Classic",
+        name: "Reebok Classic",
+        price: "₹1800",
+        desc: "Comfortable and durable everyday sneakers."
+      },
+      {
+        img: "https://via.placeholder.com/200x150.png?text=Converse+All+Star",
+        name: "Converse All Star",
+        price: "₹2000",
+        desc: "Timeless design with versatile style."
+      },
+      {
+        img: "https://via.placeholder.com/200x150.png?text=Vans+Old+Skool",
+        name: "Vans Old Skool",
+        price: "₹2100",
+        desc: "Skate shoes with iconic side stripe design."
+      }
+    ].map((product, index) => (
+      <div key={index} className="px-5">
+        <div className='border-2 border-solid border-black rounded-md p-4 flex flex-col items-center'>
+          <img src={product.img} alt={product.name} className="w-40 h-40 object-cover mb-4 rounded-md"/>
+          <h2 className="text-lg font-bold">{product.name}</h2>
+          <p className="text-gray-700 font-semibold">{product.price}</p>
+          <p className="text-gray-500 text-sm text-center mb-3">{product.desc}</p>
+          <button className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition">
+            Add to Cart
+          </button>
+        </div>
       </div>
-      <div className='justify-center items-center justify-evenly p-14'>
-        <Slider {...settings}>
-          <div className="px-10">
-          <div className='border-2 border-solid border-black rounded-md p-40 hover:scale-105 transition-transform duration-300 ease-in-out'></div>
-          </div>
-          <div className="px-10">
-          <div className='border-2 border-solid border-black rounded-md p-40'></div>
-          </div>
-          <div className="px-10">
-          <div className='border-2 border-solid border-black rounded-md p-40'></div>
-          </div>
-          <div className="px-10">
-          <div className='border-2 border-solid border-black rounded-md p-40'></div>
-          </div>
-          <div className="px-10">
-          <div className='border-2 border-solid border-black rounded-md p-40'></div>
-          </div>
-          <div className="px-10">
-          <div className='border-2 border-solid border-black rounded-md p-40'></div>
-          </div>
-          
-          </Slider>
+    ))}
+  </Slider>
+</div>
+
+    <footer className="bg-gray-800 text-white mt-16">
+  <div className="max-w-7xl mx-auto px-6 py-10 grid grid-cols-1 md:grid-cols-4 gap-8">
+    {/* About */}
+    <div>
+      <h2 className="font-bold text-lg mb-4">About Us</h2>
+      <p className="text-gray-300 text-sm">
+        We provide the best Home decor and apparel with fast delivery and top-notch customer service.
+      </p>
+    </div>
+
+    {/* Quick Links */}
+    <div>
+      <h2 className="font-bold text-lg mb-4">Quick Links</h2>
+      <ul className="text-gray-300 text-sm space-y-2">
+        <li><a href="#" className="hover:text-blue-400">Home</a></li>
+        <li><a href="#" className="hover:text-blue-400">Products</a></li>
+        <li><a href="#" className="hover:text-blue-400">Contact</a></li>
+        <li><a href="#" className="hover:text-blue-400">Help</a></li>
+      </ul>
+    </div>
+
+    {/* Customer Service */}
+    <div>
+      <h2 className="font-bold text-lg mb-4">Customer Service</h2>
+      <ul className="text-gray-300 text-sm space-y-2">
+        <li><a href="#" className="hover:text-blue-400">FAQ</a></li>
+        <li><a href="#" className="hover:text-blue-400">Shipping & Returns</a></li>
+        <li><a href="#" className="hover:text-blue-400">Terms & Conditions</a></li>
+      </ul>
+    </div>
+
+    {/* Contact Info */}
+    <div>
+      <h2 className="font-bold text-lg mb-4">Contact Us</h2>
+      <p className="text-gray-300 text-sm mb-2">Email: support@example.com</p>
+      <p className="text-gray-300 text-sm mb-2">Phone: +91 12345 67890</p>
+      <div className="flex gap-3 mt-2">
+        <a href="#" className="hover:text-blue-400">Facebook</a>
+        <a href="#" className="hover:text-blue-400">Instagram</a>
+        <a href="#" className="hover:text-blue-400">Twitter</a>
       </div>
+    </div>
+  </div>
+
+  <div className="bg-gray-900 text-gray-400 text-center py-4 text-sm">
+    &copy; 2025 Your E-commerce Website. All rights reserved.
+  </div>
+</footer>
+
     </div>
   );
 };

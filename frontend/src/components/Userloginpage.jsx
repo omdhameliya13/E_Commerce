@@ -83,7 +83,10 @@ const Userloginpage = () => {
 
         <div className='text-center'>
           <Link to="/login-artist" className="text-blue-500 hover:underline font-medium">
-            Login as Artist
+            Login as Artist / 
+          </Link>
+          <Link to="/adminlogin" className="text-blue-500 hover:underline font-medium">
+          {" "}Admin
           </Link>
         </div>
       </div>

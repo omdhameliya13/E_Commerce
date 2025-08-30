@@ -1,8 +1,37 @@
-import React from "react";
+import React,{useState,useEffect} from "react";
 import { Link } from "react-router-dom";
 import { ChevronDown, Package, PlusCircle, Search, LogOut } from "lucide-react";
+import axios from "axios";
 
 const Artistdashboard = () => {
+  const [product,setProduct] = useState([]);
+  const token = localStorage.getItem("token");
+
+  useEffect(()=>{
+    const fetchProduct = async()=>{
+      try {
+        
+        if(!token){
+          window.alert('No token, Please Login again');
+        }
+        const res = await axios.get("http://localhost:5000/api/v1/artist/product/getProduct",{
+          headers:{
+            Authorization: `Bearer ${token}`
+          }
+        });
+        console.log("API Response:", res.data);
+        setProduct(Array.isArray(res.data) ? res.data : []);
+      } 
+      catch (error) {
+        console.log(err.response?.data?.error || error.message);
+        window.alert("Faild to load Product");
+        setProduct([]);
+
+      }
+    };
+    fetchProduct();
+  },[token]);
+
   return (
     <div className="flex min-h-screen bg-gray-100">
       {/* Sidebar */}
@@ -80,36 +109,57 @@ const Artistdashboard = () => {
           <table className="w-full table-auto">
             <thead className="bg-blue-600 text-white">
               <tr>
-                <th className="px-4 py-3 text-left">Product Code</th>
-                <th className="px-4 py-3 text-left">Company</th>
-                <th className="px-4 py-3 text-left">Qty</th>
+                <th className="px-4 py-3 text-left">Product Image</th>
+                <th className="px-4 py-3 text-left">Name</th>
+                <th className="px-4 py-3 text-left">Category</th>
                 <th className="px-4 py-3 text-left">Price</th>
-                <th className="px-4 py-3 text-left">Total</th>
+                <th className="px-4 py-3 text-left">Stock</th>
                 <th className="px-4 py-3 text-left">Status</th>
               </tr>
             </thead>
             <tbody>
-              {/* Row 1 */}
-              <tr className="border-b hover:bg-gray-50 transition">
-                <td className="px-4 py-3">SHOE-001</td>
-                <td className="px-4 py-3">Nike</td>
-                <td className="px-4 py-3">2</td>
-                <td className="px-4 py-3">₹2500</td>
-                <td className="px-4 py-3">₹5000</td>
-                <td className="px-4 py-3">
-                  <div className="flex gap-2">
-                    <button className="px-3 py-1 rounded-lg text-sm font-medium bg-green-500 text-white hover:bg-green-600">
-                      Complete
-                    </button>
-                    <button className="px-3 py-1 rounded-lg text-sm font-medium bg-yellow-500 text-white hover:bg-yellow-600">
-                      Pending
-                    </button>
-                  </div>
-                </td>
-              </tr>
+              {product.length > 0 ? (
+                product.map((p)=>(
+                  <tr className="border-b hover:bg-gray-50 transition" key={p._id}>
+                    <td className="px-4 py-2">
+                      <img
+                        src={
+                            p.image
+                              ? `http://localhost:5000/${p.image}`
+                              : "https://placehold.co/80x80"
+                          }
+                        alt={p.name}
+                        className="w-16 h-16 object-cover rounded"
+                      />
+                    </td>
+                    <td className="px-4 py-3">{p.name}</td>
+                    <td className="px-4 py-3">{p.category}</td>
+                    <td className="px-4 py-3">{p.price}</td>
+                    <td className="px-4 py-3">{p.stock}</td>
+                    <td className="px-4 py-3">
+                      <div className="flex gap-2">
+                        <button className="px-3 py-1 rounded-lg text-sm font-medium bg-green-500 text-white hover:bg-green-600">
+                          Complete
+                        </button>
+                        <button className="px-3 py-1 rounded-lg text-sm font-medium bg-yellow-500 text-white hover:bg-yellow-600">
+                          Pending
+                        </button>
+                      </div>
+                    </td>
+                  </tr>))
+                  ):(<tr>
+                  <td
+                    colSpan="6"
+                    className="text-center py-4 text-gray-500"
+                  >
+                    No products found
+                  </td>
+                </tr>
+              )}
+              
 
               {/* Row 2 */}
-              <tr className="border-b hover:bg-gray-50 transition">
+             {/*} <tr className="border-b hover:bg-gray-50 transition">
                 <td className="px-4 py-3">SHOE-002</td>
                 <td className="px-4 py-3">Adidas</td>
                 <td className="px-4 py-3">1</td>
@@ -128,7 +178,7 @@ const Artistdashboard = () => {
               </tr>
 
               {/* Row 3 */}
-              <tr className="border-b hover:bg-gray-50 transition">
+              {/*<tr className="border-b hover:bg-gray-50 transition">
                 <td className="px-4 py-3">SHOE-003</td>
                 <td className="px-4 py-3">Puma</td>
                 <td className="px-4 py-3">3</td>
@@ -144,7 +194,7 @@ const Artistdashboard = () => {
                     </button>
                   </div>
                 </td>
-              </tr>
+              </tr>*/}
             </tbody>
           </table>
         </div>

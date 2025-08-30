@@ -20,7 +20,7 @@ const Artistloginpage = () => {
             window.alert('Logged in Successfuly')
             localStorage.setItem('token', res.data.token);
             console.log(res.data.token);
-            navigate('/artist');
+            navigate('/artistdashboard');
           } catch (err) {
             console.log(err.response?.data?.error)
             window.alert("Login failed",err.response?.data?.error);
@@ -64,10 +64,7 @@ const Artistloginpage = () => {
             Forgot password?
           </a>
         </div>
-<<<<<<< HEAD
-        <Link to="/artistdashboard">
-=======
->>>>>>> f5ee3db5da4427e14606ac85e92aa86a0b7e2ac4
+        
         <button className="w-full bg-blue-500 text-white py-3 rounded-lg hover:bg-blue-600 transition duration-300">
           Login
         </button>

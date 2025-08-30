@@ -7,7 +7,8 @@ import Artistregisterpage from './components/Artistregisterpage';
 import Userloginpage from './components/Userloginpage';
 import Artistloginpage from './components/Artistloginpage';
 import Artist from './components/Aritst';
-import Artistdashboard from './components/Artistdashboard'
+import Artistdashboard from './components/Artistdashboard';
+import AllOrders from './components/Allorders'
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
         <Route path="/login-artist" element={<Artistloginpage />} />
         <Route path="/artist" element={<Artist />} />
         <Route path="/artistdashboard" element={<Artistdashboard />} />
+        <Route path="/allorders" element={<AllOrders />} />
       </Routes>
     </Router>
   );

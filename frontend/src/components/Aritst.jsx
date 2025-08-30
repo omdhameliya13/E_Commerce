@@ -1,7 +1,48 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import axios from "axios";
+import React,{useState} from "react";
+import { Link,useNavigate } from "react-router-dom";
 
 const Artist = () => {
+  const [formData, setFormData] = useState({ name: '', description: '',price:'',category:'',stock:'',image:null});
+      const navigate = useNavigate();
+    
+      const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
+      const handleFileChange = (e) =>setFormData({ ...formData, image: e.target.files[0] });
+
+      const handleSubmit = async (e) => {
+      e.preventDefault();
+      if (!formData.name || !formData.description || !formData.category || !formData.price || !formData.image || !formData.stock) {
+        //return toast.error('All fields are required');
+        window.alert('All fields are required');
+      }
+      const token = localStorage.getItem("token");
+      if(!token){
+        window.alert("Login again");
+      }
+      try {
+          const data = new FormData();
+          data.append("name", formData.name);
+          data.append("description", formData.description);
+          data.append("category", formData.category);
+          data.append("price", formData.price);
+          data.append("stock", formData.stock);
+          data.append("image", formData.image);
+
+          const res = await axios.post('http://localhost:5000/api/v1/artist/product/addProduct', data,{headers:{
+          Authorization: `Bearer ${token}`
+        }});
+        //toast.success(res.data.message);
+        window.alert('Product Add Successfuly')
+        //localStorage.setItem('token', res.data.token);
+        //console.log(res.data.token);
+        navigate('/artistdashboard');
+      } catch (err) {
+        console.log(err.response?.data?.error)
+        window.alert("Faild to add Product");
+        //toast.error(err.response?.data?.error || 'Login failed');
+      }
+    };
+
   return (
     <div className="min-h-screen bg-gray-100 p-6">
       {/* Top Bar with Dashboard Button */}
@@ -22,7 +63,7 @@ const Artist = () => {
             Add New Product
           </h2>
 
-          <form className="space-y-5">
+          <form className="space-y-5" onSubmit={handleSubmit}>
             {/* Product Name */}
             <div>
               <label className="block text-gray-700 font-medium">
@@ -31,6 +72,8 @@ const Artist = () => {
               <input
                 type="text"
                 placeholder="Enter product name"
+                name="name"
+                onChange={handleChange}
                 className="w-full mt-1 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                 required
               />
@@ -44,6 +87,8 @@ const Artist = () => {
               <textarea
                 placeholder="Enter product description"
                 rows="3"
+                name="description"
+                onChange={handleChange}
                 className="w-full mt-1 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
               ></textarea>
             </div>
@@ -52,13 +97,16 @@ const Artist = () => {
             <div>
               <label className="block text-gray-700 font-medium">Category</label>
               <select
+                name="category"
+                onChange={handleChange}
                 className="w-full mt-1 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                 required
               >
                 <option value="">Select Category</option>
-                <option value="Nike">Nike</option>
-                <option value="Adidas">Adidas</option>
-                <option value="Puma">Puma</option>
+                <option value="Painting">Painting</option>
+                <option value="Art">Art</option>
+                <option value="Candels">Candels</option>
+                <option value="Lamps">Lamps</option>
               </select>
             </div>
 
@@ -68,6 +116,8 @@ const Artist = () => {
               <input
                 type="number"
                 placeholder="Enter price"
+                name="price"
+                onChange={handleChange}
                 className="w-full mt-1 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                 required
               />
@@ -77,8 +127,10 @@ const Artist = () => {
             <div>
               <label className="block text-gray-700 font-medium">Stock</label>
               <input
-                type="number"
+                type="Number"
                 placeholder="Enter available stock"
+                name="stock"
+                onChange={handleChange}
                 className="w-full mt-1 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                 required
               />
@@ -91,6 +143,8 @@ const Artist = () => {
               </label>
               <input
                 type="file"
+                name="image"
+                onChange={handleFileChange}
                 className="w-full mt-1 p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                 required
               />
@@ -105,9 +159,9 @@ const Artist = () => {
             </button>
           </form>
         </div>
-
+         
         {/* Product List Table */}
-        <div className="bg-white shadow-lg rounded-2xl p-6 w-full max-w-6xl">
+       {/*} <div className="bg-white shadow-lg rounded-2xl p-6 w-full max-w-6xl">
           <h3 className="text-xl font-bold text-gray-800 mb-4">
             Added Products
           </h3>
@@ -125,7 +179,7 @@ const Artist = () => {
               </thead>
               <tbody>
                 {/* Row 1 */}
-                <tr className="border-b hover:bg-gray-50 transition">
+                {/*<tr className="border-b hover:bg-gray-50 transition">
                   <td className="px-4 py-2">
                     <img
                       src="https://via.placeholder.com/80"
@@ -145,10 +199,10 @@ const Artist = () => {
                       Delete
                     </button>
                   </td>
-                </tr>
+                </tr>*/}
 
                 {/* Row 2 */}
-                <tr className="border-b hover:bg-gray-50 transition">
+                {/*<tr className="border-b hover:bg-gray-50 transition">
                   <td className="px-4 py-2">
                     <img
                       src="https://via.placeholder.com/80"
@@ -168,10 +222,10 @@ const Artist = () => {
                       Delete
                     </button>
                   </td>
-                </tr>
+                </tr>*/}
 
                 {/* Row 3 */}
-                <tr className="hover:bg-gray-50 transition">
+              {/*}  <tr className="hover:bg-gray-50 transition">
                   <td className="px-4 py-2">
                     <img
                       src="https://via.placeholder.com/80"
@@ -195,7 +249,7 @@ const Artist = () => {
               </tbody>
             </table>
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );

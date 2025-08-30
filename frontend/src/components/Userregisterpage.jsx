@@ -13,14 +13,22 @@ const Userregisterpage = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
             if (!formData.name || !formData.email || !formData.password) {
-            return toast.error('All fields are required');
+            window.alert("all feild req");
+            //return toast.error('All fields are required');
+            
+
         }
         try {
-            const res = await axios.post('http://localhost:5000/users', formData);
-            toast.success(res.data.message);
-            navigate('/login');
+            //console.log("Sending data:", formData);
+            const res = await axios.post('http://localhost:5000/api/v1/user/auth/register', formData);
+            window.alert("Signup Successfully");
+            //toast.success(res.data.message);
+            navigate('/login-user');
         } catch (err) {
-            toast.error(err.response?.data?.error || 'Signup failed');
+            console.log("Signup failed");
+            window.alert("Signup failed")
+            //toast.error(err.response?.data?.error || 'Signup failed');
+            
         }
     }
     return(
@@ -31,18 +39,17 @@ const Userregisterpage = () => {
                 <div className='flex justify-center items-center'>
                     <div className='flex w-[1000px] h-[500px] bg-white rounded-xl shadow-lg overflow-hidden'>
                         <div className='w-1/2  flex justify-center items-center'>
-                            <form action="#" className='w-[330px]' onSubmit={handleSubmit}>
-                                <input type="text" placeholder="Name" onChange={handleChange} className="w-full rounded-xl border border-gray-300 bg-white px-3 py-2 text-gray-900 placeholder-gray-400 shadow-sm focus:border-black focus:outline-none focus:ring-2 focus:ring-black/5" required/><br/><br/>
-                                <input type="email" placeholder="Email" onChange={handleChange} className="w-full rounded-xl border border-gray-300 bg-white px-3 py-2 text-gray-900 placeholder-gray-400 shadow-sm focus:border-black focus:outline-none focus:ring-2 focus:ring-black/5" required/><br /><br />
-                                <input type="password" placeholder="Password" onChange={handleChange} className="w-full rounded-xl border border-gray-300 bg-white px-2 py-2 text-gray-900 placeholder-gray-400 shadow-sm focus:border-black focus:outline-none focus:ring-2 focus:ring-black/5" required/><br /><br />
-                                <Link to="/login-user">
+                            <form className='w-[330px]' onSubmit={handleSubmit}>
+                                <input type="text" placeholder="Name" name="name" onChange={handleChange} className="w-full rounded-xl border border-gray-300 bg-white px-3 py-2 text-gray-900 placeholder-gray-400 shadow-sm focus:border-black focus:outline-none focus:ring-2 focus:ring-black/5" required/><br/><br/>
+                                <input type="email" placeholder="Email" name="email" onChange={handleChange} className="w-full rounded-xl border border-gray-300 bg-white px-3 py-2 text-gray-900 placeholder-gray-400 shadow-sm focus:border-black focus:outline-none focus:ring-2 focus:ring-black/5" required/><br /><br />
+                                <input type="password" placeholder="Password" name="password" onChange={handleChange} className="w-full rounded-xl border border-gray-300 bg-white px-2 py-2 text-gray-900 placeholder-gray-400 shadow-sm focus:border-black focus:outline-none focus:ring-2 focus:ring-black/5" required/><br /><br />
+                                
                                 <button type="submit" className="w-full rounded-xl bg-blue-400 text-white py-2.5 font-medium shadow-md hover:bg-blue-500">
                                     Sign up
                                 </button>
-                                </Link>
                                 <p className="mt-4 text-center text-sm text-gray-600">
                                     Already have an account?{' '}
-                                    <a href="#" className="font-medium text-gray-900 underline underline-offset-4 hover:no-underline">
+                                    <a href="/login-user" className="font-medium text-gray-900 underline underline-offset-4 hover:no-underline">
                                         Login
                                     </a>
                                 </p>

@@ -1,8 +1,22 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { ChevronDown, Package, PlusCircle, Search, LogOut } from "lucide-react";
 
 const Artistdashboard = () => {
+  // Sample orders data
+  const orders = [
+    { code: "SHOE-001", company: "Nike", qty: 2, price: 2500, total: 5000, status: "Complete" },
+    { code: "SHOE-002", company: "Adidas", qty: 1, price: 3000, total: 3000, status: "Pending" },
+    { code: "SHOE-003", company: "Puma", qty: 3, price: 2000, total: 6000, status: "Pending" },
+    { code: "SHOE-004", company: "Reebok", qty: 1, price: 3500, total: 3500, status: "Complete" },
+  ];
+
+  const [selectedFilter, setSelectedFilter] = useState("All");
+  const filteredOrders =
+    selectedFilter === "All"
+      ? orders
+      : orders.filter((order) => order.status === selectedFilter);
+
   return (
     <div className="flex min-h-screen bg-gray-100">
       {/* Sidebar */}
@@ -23,18 +37,36 @@ const Artistdashboard = () => {
 
           {/* Submenu */}
           <div className="ml-8 mt-2 flex flex-col gap-2">
-            <Link
-              to="#"
-              className="text-gray-600 hover:text-blue-600 transition text-sm"
+            <button
+              onClick={() => setSelectedFilter("Pending")}
+              className={`text-left text-sm transition ${
+                selectedFilter === "Pending"
+                  ? "text-blue-600 font-semibold"
+                  : "text-gray-600 hover:text-blue-600"
+              }`}
             >
               Pending
-            </Link>
-            <Link
-              to="#"
-              className="text-gray-600 hover:text-blue-600 transition text-sm"
+            </button>
+            <button
+              onClick={() => setSelectedFilter("Complete")}
+              className={`text-left text-sm transition ${
+                selectedFilter === "Complete"
+                  ? "text-blue-600 font-semibold"
+                  : "text-gray-600 hover:text-blue-600"
+              }`}
             >
               Complete
-            </Link>
+            </button>
+            <button
+              onClick={() => setSelectedFilter("All")}
+              className={`text-left text-sm transition ${
+                selectedFilter === "All"
+                  ? "text-blue-600 font-semibold"
+                  : "text-gray-600 hover:text-blue-600"
+              }`}
+            >
+              All Orders
+            </button>
           </div>
         </div>
 
@@ -54,16 +86,18 @@ const Artistdashboard = () => {
       <div className="flex-1 p-8 relative">
         {/* Logout Button */}
         <div className="absolute top-6 right-8">
-            <Link to="/login-user">
-          <button className="flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg shadow-md transition">
-            <LogOut size={18} />
-            Logout
-          </button>
+          <Link to="/login-user">
+            <button className="flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg shadow-md transition">
+              <LogOut size={18} />
+              Logout
+            </button>
           </Link>
         </div>
 
         {/* Heading */}
-        <h1 className="text-3xl font-bold mb-4 text-gray-800">Hey Seller 👋</h1>
+        <h1 className="text-3xl font-bold mb-4 text-gray-800">
+          Hey Seller 👋
+        </h1>
 
         {/* Search Bar */}
         <div className="relative w-full max-w-md mb-6">
@@ -85,66 +119,59 @@ const Artistdashboard = () => {
                 <th className="px-4 py-3 text-left">Qty</th>
                 <th className="px-4 py-3 text-left">Price</th>
                 <th className="px-4 py-3 text-left">Total</th>
-                <th className="px-4 py-3 text-left">Status</th>
+                {selectedFilter !== "Complete" && (
+                  <th className="px-4 py-3 text-left">Status</th>
+                )}
               </tr>
             </thead>
             <tbody>
-              {/* Row 1 */}
-              <tr className="border-b hover:bg-gray-50 transition">
-                <td className="px-4 py-3">SHOE-001</td>
-                <td className="px-4 py-3">Nike</td>
-                <td className="px-4 py-3">2</td>
-                <td className="px-4 py-3">₹2500</td>
-                <td className="px-4 py-3">₹5000</td>
-                <td className="px-4 py-3">
-                  <div className="flex gap-2">
-                    <button className="px-3 py-1 rounded-lg text-sm font-medium bg-green-500 text-white hover:bg-green-600">
-                      Complete
-                    </button>
-                    <button className="px-3 py-1 rounded-lg text-sm font-medium bg-yellow-500 text-white hover:bg-yellow-600">
-                      Pending
-                    </button>
-                  </div>
-                </td>
-              </tr>
+              {filteredOrders.map((order, index) => (
+                <tr
+                  key={index}
+                  className="border-b hover:bg-gray-50 transition"
+                >
+                  <td className="px-4 py-3">{order.code}</td>
+                  <td className="px-4 py-3">{order.company}</td>
+                  <td className="px-4 py-3">{order.qty}</td>
+                  <td className="px-4 py-3">₹{order.price}</td>
+                  <td className="px-4 py-3">₹{order.total}</td>
+                  {selectedFilter !== "Complete" && (
+                    <td className="px-4 py-3">
+                      {selectedFilter === "Pending" ? (
+                        <div className="flex gap-2">
+                          <button className="px-3 py-1 rounded-lg text-sm font-medium bg-blue-500 text-white hover:bg-red-600">
+                            Action
+                          </button>
+                          <button className="px-3 py-1 rounded-lg text-sm font-medium bg-yellow-500 text-white hover:bg-yellow-600">
+                            Pending
+                          </button>
+                        </div>
+                      ) : (
+                        <span
+                          className={`px-3 py-1 rounded-lg text-sm font-medium ${
+                            order.status === "Complete"
+                              ? "bg-green-500 text-white"
+                              : "bg-yellow-500 text-white"
+                          }`}
+                        >
+                          {order.status}
+                        </span>
+                      )}
+                    </td>
+                  )}
+                </tr>
+              ))}
 
-              {/* Row 2 */}
-              <tr className="border-b hover:bg-gray-50 transition">
-                <td className="px-4 py-3">SHOE-002</td>
-                <td className="px-4 py-3">Adidas</td>
-                <td className="px-4 py-3">1</td>
-                <td className="px-4 py-3">₹3000</td>
-                <td className="px-4 py-3">₹3000</td>
-                <td className="px-4 py-3">
-                  <div className="flex gap-2">
-                    <button className="px-3 py-1 rounded-lg text-sm font-medium bg-green-500 text-white hover:bg-green-600">
-                      Complete
-                    </button>
-                    <button className="px-3 py-1 rounded-lg text-sm font-medium bg-yellow-500 text-white hover:bg-yellow-600">
-                      Pending
-                    </button>
-                  </div>
-                </td>
-              </tr>
-
-              {/* Row 3 */}
-              <tr className="border-b hover:bg-gray-50 transition">
-                <td className="px-4 py-3">SHOE-003</td>
-                <td className="px-4 py-3">Puma</td>
-                <td className="px-4 py-3">3</td>
-                <td className="px-4 py-3">₹2000</td>
-                <td className="px-4 py-3">₹6000</td>
-                <td className="px-4 py-3">
-                  <div className="flex gap-2">
-                    <button className="px-3 py-1 rounded-lg text-sm font-medium bg-green-500 text-white hover:bg-green-600">
-                      Complete
-                    </button>
-                    <button className="px-3 py-1 rounded-lg text-sm font-medium bg-yellow-500 text-white hover:bg-yellow-600">
-                      Pending
-                    </button>
-                  </div>
-                </td>
-              </tr>
+              {filteredOrders.length === 0 && (
+                <tr>
+                  <td
+                    colSpan={selectedFilter === "Complete" ? 5 : 6}
+                    className="text-center py-6 text-gray-500"
+                  >
+                    No orders found 😕
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>

@@ -37,22 +37,13 @@ const Artistregisterpage = () => {
                 <div className='flex justify-center items-center'>
                     <div className='flex w-[1000px] h-[500px] bg-white rounded-xl shadow-lg overflow-hidden'>
                         <div className='w-1/2  flex justify-center items-center'>
-<<<<<<< HEAD
-                            <form action="#" className='w-[330px]'>
-                                <input type="text" placeholder="Name" className="w-full rounded-xl border border-gray-300 bg-white px-3 py-2 text-gray-900 placeholder-gray-400 shadow-sm focus:border-black focus:outline-none focus:ring-2 focus:ring-black/5" required/><br/><br/>
-                                <input type="email" placeholder="Email" className="w-full rounded-xl border border-gray-300 bg-white px-3 py-2 text-gray-900 placeholder-gray-400 shadow-sm focus:border-black focus:outline-none focus:ring-2 focus:ring-black/5" required/><br /><br />
-                                <input type="password" placeholder="Password" className="w-full rounded-xl border border-gray-300 bg-white px-2 py-2 text-gray-900 placeholder-gray-400 shadow-sm focus:border-black focus:outline-none focus:ring-2 focus:ring-black/5" required/><br /><br />
-                                <Link to="/login-artist">
-=======
                             <form onSubmit={handleSubmit} className='w-[330px]'>
-                                <input type="text" placeholder="Name" name='name' onChange={handleChange} className="w-full rounded-xl border border-gray-300 bg-white px-3 py-2 text-gray-900 placeholder-gray-400 shadow-sm focus:border-black focus:outline-none focus:ring-2 focus:ring-black/5" required/><br/><br/>
-                                <input type="email" placeholder="Email" name='email' onChange={handleChange} className="w-full rounded-xl border border-gray-300 bg-white px-3 py-2 text-gray-900 placeholder-gray-400 shadow-sm focus:border-black focus:outline-none focus:ring-2 focus:ring-black/5" required/><br /><br />
-                                <input type="password" placeholder="Password" name='password' onChange={handleChange} className="w-full rounded-xl border border-gray-300 bg-white px-2 py-2 text-gray-900 placeholder-gray-400 shadow-sm focus:border-black focus:outline-none focus:ring-2 focus:ring-black/5" required/><br /><br />
->>>>>>> f5ee3db5da4427e14606ac85e92aa86a0b7e2ac4
+                                <input type="text" name='name' onChange={handleChange} placeholder="Name" className="w-full rounded-xl border border-gray-300 bg-white px-3 py-2 text-gray-900 placeholder-gray-400 shadow-sm focus:border-black focus:outline-none focus:ring-2 focus:ring-black/5" required/><br/><br/>
+                                <input type="email" name='email' onChange={handleChange} placeholder="Email" className="w-full rounded-xl border border-gray-300 bg-white px-3 py-2 text-gray-900 placeholder-gray-400 shadow-sm focus:border-black focus:outline-none focus:ring-2 focus:ring-black/5" required/><br /><br />
+                                <input type="password" name='password' onChange={handleChange} placeholder="Password" className="w-full rounded-xl border border-gray-300 bg-white px-2 py-2 text-gray-900 placeholder-gray-400 shadow-sm focus:border-black focus:outline-none focus:ring-2 focus:ring-black/5" required/><br /><br />
                                 <button type="submit" className="w-full rounded-xl bg-blue-400 text-white py-2.5 font-medium shadow-md hover:bg-blue-500">
                                     Sign up
                                 </button>
-                                </Link>
                                 <p className="mt-4 text-center text-sm text-gray-600">
                                     Already have an account?{' '}
                                     <Link to="/login-artist" className="font-medium text-gray-900 underline underline-offset-4 hover:no-underline">

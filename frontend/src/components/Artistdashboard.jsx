@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { ChevronDown, Package, PlusCircle, LogOut } from "lucide-react";
 import axios from "axios";
+import toast from "react-hot-toast";
 
 const Artistdashboard = () => {
   const [products, setProduct] = useState([]);
@@ -11,7 +12,7 @@ const Artistdashboard = () => {
     const fetchProduct = async () => {
       try {
         if (!token) {
-          window.alert("No token, Please Login again");
+          toast.error("No token, Please Login again");
           return;
         }
 
@@ -27,7 +28,7 @@ const Artistdashboard = () => {
         setProduct(Array.isArray(res.data) ? res.data : []);
       } catch (error) {
         console.log(error.response?.data?.error || error.message);
-        window.alert("Failed to load Product");
+        toast.error("Failed to load Product");
         setProduct([]);
       }
     };
@@ -52,10 +53,10 @@ const Artistdashboard = () => {
     // Remove deleted product from UI without refreshing
     setProduct((prev) => prev.filter((p) => p._id !== id));
 
-    window.alert("Product deleted successfully");
+    toast.success("Product deleted successfully");
   } catch (error) {
     console.error(error.response?.data?.error || error.message);
-    window.alert("Failed to delete product");
+    toast.error("Failed to delete product");
   }
 };
 

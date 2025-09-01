@@ -43,7 +43,9 @@ function App() {
         {/* Orders */}
         <Route path="/pendingorders" element={<Pendingorders/>} />
         <Route path="/completeorders" element={<Completeorders/>} />
+        
       </Routes>
+      <Toaster position='bottom-right' toastOptions={{style:{fontSize:"16px",padding:"16px 20px",borderRedius:"10px"}}} reverseOrder="false"></Toaster>
     </Router>
   );
 }

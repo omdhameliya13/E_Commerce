@@ -1,6 +1,7 @@
 import axios from "axios";
 import React,{useState} from "react";
 import { Link,useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const Artist = () => {
       const [formData, setFormData] = useState({ name: '', description: '',price:'',category:'',stock:'',image:null});
@@ -13,11 +14,11 @@ const Artist = () => {
       e.preventDefault();
       if (!formData.name || !formData.description || !formData.category || !formData.price || !formData.image || !formData.stock) {
         //return toast.error('All fields are required');
-        window.alert('All fields are required');
+        toast.success('All fields are required');
       }
       const token = localStorage.getItem("token");
       if(!token){
-        window.alert("Login again");
+        toast.error("Login again");
       }
       try {
           const data = new FormData();
@@ -32,13 +33,12 @@ const Artist = () => {
           Authorization: `Bearer ${token}`
         }});
         //toast.success(res.data.message);
-        window.alert('Product Add Successfuly')
-        //localStorage.setItem('token', res.data.token);
-        //console.log(res.data.token);
+        toast.success('Product Add Successfully')
+        
         navigate('/artistdashboard');
       } catch (err) {
         console.log(err.response?.data?.error)
-        window.alert("Faild to add Product");
+        toast.error("Faild to add Product");
         //toast.error(err.response?.data?.error || 'Login failed');
       }
     };

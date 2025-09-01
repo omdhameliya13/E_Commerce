@@ -1,6 +1,7 @@
 import axios from "axios";
 import React,{useEffect, useState} from "react";
 import { Link,useNavigate, useParams } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const Artist = () => {
       const{id} = useParams();
@@ -29,7 +30,7 @@ const Artist = () => {
             }
             catch(error){
                 console.error(err.response?.data?.error || err.message);
-                window.alert("Failed to fetch product details");
+                toast.error("Failed to fetch product details");
             }
         }
     };
@@ -43,12 +44,12 @@ const Artist = () => {
       e.preventDefault();
       if (!formData.name || !formData.description || !formData.category || !formData.price || !formData.stock) {
         //return toast.error('All fields are required');
-        window.alert('All fields are required');
+        toast.error('All fields are required');
         return;
       }
       //const token = localStorage.getItem("token");
       if(!token){
-        window.alert("Login again");
+        toast.error("Login again");
         return;
       }
       try {
@@ -72,13 +73,13 @@ const Artist = () => {
             { headers: { Authorization: `Bearer ${token}` } }
             );
 
-            window.alert("Product updated successfully");
+            toast.success("Product updated successfully");
             navigate("/artistdashboard");
         
       } catch (err) {
         console.log(err.response?.data?.error)
-        window.alert("Faild to Update Product");
-        //toast.error(err.response?.data?.error || 'Login failed');
+        toast.error("Faild to Update Product");
+        
       }
     };
 

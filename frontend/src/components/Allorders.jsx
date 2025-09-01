@@ -2,6 +2,7 @@ import React,{useState,useEffect} from "react";
 import { Link } from "react-router-dom";
 import { LogOut } from "lucide-react";
 import axios from "axios";
+import toast from "react-hot-toast";
 
 const AllOrders = () => {
   
@@ -18,7 +19,7 @@ const AllOrders = () => {
     const fetchOrders = async() =>{
       try {
         if(!token){
-          window.alert("No token, Please Login again");
+          toast.error("No token, Please Login again");
           return;
         }
         const res = await axios.get("http://localhost:5000/api/v1/artist/orders/getOrders",
@@ -27,7 +28,7 @@ const AllOrders = () => {
         setOrders(Array.isArray(res.data)?res.data:[]);
       } catch (error) {
         console.log(error.response?.data?.error || error.message);
-        window.alert("Error to Fatch Orders");
+        toast.error("Error to Fatch Orders");
         setOrders([])
       }
     }

@@ -2,6 +2,7 @@ import React,{useState} from "react";
 import { Lock, User } from "lucide-react";
 import { Link ,useNavigate} from "react-router-dom";
 import axios from "axios";
+import toast from "react-hot-toast";
 
 const Adminlogin = () => {
   
@@ -23,18 +24,18 @@ const Adminlogin = () => {
     try {
       const res = await axios.post("http://localhost:5000/api/v1/admin/auth/login",formData);
       localStorage.setItem('token',res.data.token);
-      window.alert("Login Successfully");
+      toast.success("Admin Login Successfully");
       navigate("/admindashboard")
     } catch (error) {
       if(error.response){
         if(error.response.status === 404){
-          window.alert("User not Found, Register first ");
+          toast.error("User not Found, Register first ");
         }
         else if(error.response.status === 401){
-          window.alert("Invalid Password");
+          toast.error("Invalid Password");
         }
         else{
-          window.alert(error.response?.data?.error || "Login Faild");
+          toast.error(error.response?.data?.error || "Login Faild");
         }
       }
     }

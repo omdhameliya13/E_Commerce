@@ -12,6 +12,7 @@ import {
   Trash2,
 } from "lucide-react";
 import axios from "axios";
+import toast from "react-hot-toast";
 const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
 
@@ -27,7 +28,7 @@ const AdminDashboard = () => {
     const fetchArtist = async()=>{
       try {
         if(!token){
-          window.alert("token not found, Login first");
+          toast.error("token not found, Login first");
           return;
         }
         const res = await axios.get("http://localhost:5000/api/v1/admin/manageArtist/getAllArtist",{
@@ -37,7 +38,7 @@ const AdminDashboard = () => {
         setArtist(res.data.artists);
       } catch (error) {
         console.log(error.response?.data?.error || error.message);
-        window.alert("Faild to load Artist");
+        toast.error("Faild to load Artist");
         setArtist([]);
       }
       
@@ -51,10 +52,10 @@ const AdminDashboard = () => {
         headers:{Authorization:`Bearer ${token}`}
       });
       setArtist((prev)=>prev.map((a)=> a._id===id ?{ ...a,isverified:true}:a));
-      window.alert('Artist Verified');
+      toast.success('Artist Verified');
     } catch (error) {
       console.log(error.res?.data?.error);
-      window.alert("Faild to verify Artist");
+      toast.error("Faild to verify Artist");
     }
   }
 
@@ -64,10 +65,10 @@ const AdminDashboard = () => {
         headers : {Authorization : `Bearer ${token}`}
       });
       setArtist((prev)=>prev.map((a)=>a._id === id ? { ...a,isverified:false}:a));
-      window.alert("Artist Rejected");
+      toast.success("Artist Rejected");
     } catch (error) {
       console.log(error.res?.data?.error);
-      window.alert("Faild to Reject Artist");
+      toast.error("Faild to Reject Artist");
     }
   }
 
@@ -86,7 +87,7 @@ const AdminDashboard = () => {
         setProduct(res.data.product);
       } catch (error) {
         console.log(error.response?.data?.error ||error.message);
-        window.alert("Unable to fetch Product");
+        toast.error("Unable to fetch Product");
         setProduct([]);
       }
     }

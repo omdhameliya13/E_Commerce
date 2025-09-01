@@ -1,6 +1,7 @@
 import React,{useState} from 'react';
 import axios from 'axios';
 import { Link,useNavigate } from "react-router-dom";
+import toast from 'react-hot-toast';
 
 const Artistregisterpage = () => {
     const [formData, setFormData] = useState({ name: '', email: '', password: '' });
@@ -12,29 +13,29 @@ const Artistregisterpage = () => {
             e.preventDefault();
                 
             if(!formData.name){
-                window.alert("Please fill Username")
+                toast.error("Please fill Username")
             }
             if(!formData.email){
-                window.alert("Please fill Email")
+                toast.error("Please fill Email")
             }
             if(!formData.password){
-                window.alert("Please fill Password")
+                toast.error("Please fill Password")
             }
             
             try {
                 //console.log("Sending data:", formData);
                 const res = await axios.post('http://localhost:5000/api/v1/artist/auth/register', formData);
-                window.alert("Signup Successfully");
+                toast.success("Signup Successfully");
                 //toast.success(res.data.message);
                 navigate('/login-artist');
             } catch (error) {
                 if(error.response){
                 if(error.response.status === 400){
-                    window.alert("User already registered with this email");
+                    toast.error("User already registered with this email");
                 }
                 else{
                     console.log(error);
-                    window.alert(error.response?.data?.error ||"Signup Faild");
+                    toast.error(error.response?.data?.error ||"Signup Faild");
                 }
       }
                 

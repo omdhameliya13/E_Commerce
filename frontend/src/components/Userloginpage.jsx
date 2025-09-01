@@ -10,10 +10,14 @@ const Userloginpage = () => {
   
     const handleSubmit = async (e) => {
       e.preventDefault();
-      if (!formData.email || !formData.password) {
-        //return toast.error('All fields are required');
-        window.alert('All fields are required');
+
+      if(!formData.email){
+        window.alert("Please fill Email")
       }
+      if(!formData.password){
+        window.alert("Please fill Password")
+      }
+
       try {
         const res = await axios.post('http://localhost:5000/api/v1/user/auth/login', formData);
         //toast.success(res.data.message);
@@ -21,10 +25,18 @@ const Userloginpage = () => {
         localStorage.setItem('token', res.data.token);
         console.log(res.data.token);
         navigate('/');
-      } catch (err) {
-        console.log(err.response?.data?.error)
-        window.alert("Login failed");
-        //toast.error(err.response?.data?.error || 'Login failed');
+      } catch (error) {
+        if(error.response){
+          if(error.response.status === 404){
+            window.alert("User not Found, Register first ");
+          }
+          else if(error.response.status === 401){
+            window.alert("Invalid Password");
+          }
+          else{
+            window.alert(error.response?.data?.error || "Login Faild");
+          }
+        }
       }
     };
     return(

@@ -10,22 +10,33 @@ const Artistregisterpage = () => {
     
         const handleSubmit = async (e) => {
             e.preventDefault();
-                if (!formData.name || !formData.email || !formData.password) {
-                window.alert("all feild req");
-                //return toast.error('All fields are required');
                 
-    
+            if(!formData.name){
+                window.alert("Please fill Username")
             }
+            if(!formData.email){
+                window.alert("Please fill Email")
+            }
+            if(!formData.password){
+                window.alert("Please fill Password")
+            }
+            
             try {
                 //console.log("Sending data:", formData);
                 const res = await axios.post('http://localhost:5000/api/v1/artist/auth/register', formData);
                 window.alert("Signup Successfully");
                 //toast.success(res.data.message);
                 navigate('/login-artist');
-            } catch (err) {
-                console.log("Signup failed");
-                window.alert("Signup failed")
-                //toast.error(err.response?.data?.error || 'Signup failed');
+            } catch (error) {
+                if(error.response){
+                if(error.response.status === 400){
+                    window.alert("User already registered with this email");
+                }
+                else{
+                    console.log(error);
+                    window.alert(error.response?.data?.error ||"Signup Faild");
+                }
+      }
                 
             }
         }

@@ -14,6 +14,7 @@ import Adminlogin from './components/Adminlogin';
 import Adminsignup from './components/Adminsignup';
 import Pendingorders from './components/Pendingorders';
 import Completeorders from './components/Completeorders'
+import ArtistUpdate from './components/ArtistUpdate';
 
 function App() {
   return (

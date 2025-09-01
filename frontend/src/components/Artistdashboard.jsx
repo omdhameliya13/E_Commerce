@@ -68,8 +68,18 @@ const Artistdashboard = () => {
           Dashboard
         </h1>
 
-        {/* Sales Orders*/}
         <div>
+          {/* Add Product */}
+          <div className="mt-4">
+            <Link
+              to="/artist"
+              className="flex items-center gap-3 p-3 rounded-lg hover:bg-blue-100 transition"
+            >
+              <PlusCircle size={20} />
+              <span className="font-medium">Add Product</span>
+            </Link>
+          </div>
+
           <button className="flex items-center justify-between w-full p-3 rounded-lg hover:bg-blue-100 transition">
             <span className="flex items-center gap-3">
               <Package size={20} />
@@ -100,16 +110,7 @@ const Artistdashboard = () => {
           </div>
         </div>
 
-        {/* Add Product */}
-        <div className="mt-4">
-          <Link
-            to="/artist"
-            className="flex items-center gap-3 p-3 rounded-lg hover:bg-blue-100 transition"
-          >
-            <PlusCircle size={20} />
-            <span className="font-medium">Add Product</span>
-          </Link>
-        </div>
+        
       </div>
 
       {/* Main Content */}

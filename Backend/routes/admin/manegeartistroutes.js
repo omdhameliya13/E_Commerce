@@ -4,8 +4,8 @@ const manageArtist = require('../../controllers/admin/manageartistcontroller')
 const {protect} = require('../../middleware/authmiddleware');
 
 Router.get("/getAllArtist",protect,manageArtist.getAllArtist);
-Router.get("/getUnVerifiedArtist",protect,manageArtist.getUnVerifiedArtist);
+Router.get("/getArtistById/:id",protect,manageArtist.getArtistById);
 Router.put("/verifyArtist/:id",protect,manageArtist.verifyArtist);
-Router.put("/rejectArtist",protect,manageArtist.rejectArtist);
+Router.put("/rejectArtist/:id",protect,manageArtist.rejectArtist);
 
 module.exports = Router

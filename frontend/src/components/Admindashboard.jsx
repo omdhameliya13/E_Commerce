@@ -15,26 +15,6 @@ import axios from "axios";
 const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
 
-  // Dummy Data
-  /*const products = [
-    {
-      id: 1,
-      name: "Nike Air Zoom",
-      price: 2500,
-      stock: 10,
-      img: "https://via.placeholder.com/150x100.png?text=Nike+Air+Zoom",
-      status: "Active",
-    },
-    {
-      id: 2,
-      name: "Adidas Ultraboost",
-      price: 3000,
-      stock: 8,
-      img: "https://via.placeholder.com/150x100.png?text=Adidas+Ultraboost",
-      status: "Inactive",
-    },
-  ];*/
-
   const orders = [
     { id: 1, customer: "John Doe", total: "₹5000", status: "Pending" },
     { id: 2, customer: "Jane Smith", total: "₹3000", status: "Completed" },
@@ -64,6 +44,34 @@ const AdminDashboard = () => {
     };
     fetchArtist();
   },[activeTab,token]);
+
+  const handleVerify = async(id)=>{
+    try {
+      const res = await axios.put(`http://localhost:5000/api/v1/admin/manageArtist/verifyArtist/${id}`,{},{
+        headers:{Authorization:`Bearer ${token}`}
+      });
+      setArtist((prev)=>prev.map((a)=> a._id===id ?{ ...a,isverified:true}:a));
+      window.alert('Artist Verified');
+    } catch (error) {
+      console.log(error.res?.data?.error);
+      window.alert("Faild to verify Artist");
+    }
+  }
+
+  const handleReject = async(id) =>{
+    try {
+      const res = await axios.put(`http://localhost:5000/api/v1/admin/manageArtist/rejectArtist/${id}`,{},{
+        headers : {Authorization : `Bearer ${token}`}
+      });
+      setArtist((prev)=>prev.map((a)=>a._id === id ? { ...a,isverified:false}:a));
+      window.alert("Artist Rejected");
+    } catch (error) {
+      console.log(error.res?.data?.error);
+      window.alert("Faild to Reject Artist");
+    }
+  }
+
+
 
   const[products,setProduct] = useState([]);
   useEffect(()=>{
@@ -225,15 +233,15 @@ const AdminDashboard = () => {
                 </td>
                 <td className="px-4 py-3 flex gap-2">
                   {a.isverified ? (
-                    <button className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg shadow">
+                    <button onClick={()=>{handleReject(a._id)}} className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg shadow">
                       Reject
                     </button>
                   ) : (
                     <>
-                      <button className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded-lg shadow">
-                        Approve
+                      <button onClick={()=>{handleVerify(a._id)}} className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded-lg shadow">
+                        Verify
                       </button>
-                      <button className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg shadow">
+                      <button onClick={()=>{handleReject(a._id)}} className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg shadow">
                         Reject
                       </button>
                     </>
@@ -309,12 +317,12 @@ const AdminDashboard = () => {
                     {product.isapproved ? "Approved" : "Pending"}
                   </span>
                 </td>
-                <td className="px-4 py-3 flex gap-2">
+                <td className="px-4 py-8 flex gap-2">
                   <button className="flex items-center gap-1 bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded-lg">
-                    <Edit size={16} /> Edit
+                     Approve
                   </button>
                   <button className="flex items-center gap-1 bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg">
-                    <Trash2 size={16} /> Delete
+                     Reject
                   </button>
                 </td>
               </tr>

@@ -10,7 +10,8 @@ const Artist = () => {
       
       useEffect(()=>{
         const fetchProduct = async()=>{
-            if(id){
+            if(id)
+            {
             try {
                 const res = await axios.get(`http://localhost:5000/api/v1/artist/product/getProductById/${id}`,
                 {

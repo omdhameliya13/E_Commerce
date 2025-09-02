@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { LogOut } from "lucide-react";
 
 const AllOrders = () => {
-  // Static orders data (UI only)
+
   const orders = [
     { code: "SHOE-001", company: "Nike", qty: 2, price: 2500, total: 5000, status: "Complete" },
     { code: "SHOE-002", company: "Adidas", qty: 1, price: 3000, total: 3000, status: "Pending" },

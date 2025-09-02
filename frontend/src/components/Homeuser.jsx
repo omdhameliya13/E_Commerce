@@ -21,6 +21,7 @@ const Homeuser = () => {
             <div class="shrink order-1">FREE DELIVERY ON ORDERS OVER Rs.2999</div>
             <div class="order-2 flex p-2 ">
               <div className="flex gap-4 justify-center -mt-1 w-40 max-w-sm mx-auto">
+                {/*
                 <Link to="/login-user">
                 <button className="flex-1 px-4 bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition">
                     Login
@@ -31,8 +32,9 @@ const Homeuser = () => {
                     Register
                   </button>
                 </Link>
+                */}
                 <Link to="#">
-                  <button className="flex-1 bg-green-500 text-white py-2 rounded-lg hover:bg-green-600 transition hidden">
+                  <button className="flex-1 bg-green-500 text-white py-2 rounded-lg hover:bg-green-600 transition ">
                     My Account
                   </button>
                   </Link>

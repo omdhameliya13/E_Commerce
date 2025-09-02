@@ -5,7 +5,8 @@ const Artist = require('../../models/artist');
 
 const getAllArtist = async(req,res)=>{
     try {
-        const artists = await Artist.find();
+        const artists = await Artist.find()
+
         if(!artists){
            return res.status(404).json({message:"Artist not found !"});
         }

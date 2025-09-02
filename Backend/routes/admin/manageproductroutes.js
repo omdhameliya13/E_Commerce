@@ -6,6 +6,6 @@ const {protect} = require('../../middleware/authmiddleware');
 Router.get("/getAllProduct",protect,manageProduct.getAllProduct);
 Router.get("/getUnApprovedProduct",protect,manageProduct.getUnApprovedProduct);
 Router.put("/approveProduct/:id",protect,manageProduct.approveProduct);
-Router.put("/rejectProduct",protect,manageProduct.rejectProduct);
+Router.put("/rejectProduct/:id",protect,manageProduct.rejectProduct);
 
 module.exports = Router

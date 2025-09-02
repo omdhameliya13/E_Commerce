@@ -31,10 +31,11 @@ const AdminDashboard = () => {
           toast.error("token not found, Login first");
           return;
         }
-        const res = await axios.get("http://localhost:5000/api/v1/admin/manageArtist/getAllArtist",{
+        const res = await axios.get(`http://localhost:5000/api/v1/admin/manageArtist/getAllArtist`,{
           headers:{Authorization: `Bearer ${token}`}
         });
         console.log("API RESponse",res.data);
+        
         setArtist(res.data.artists);
       } catch (error) {
         console.log(error.response?.data?.error || error.message);
@@ -73,7 +74,6 @@ const AdminDashboard = () => {
   }
 
 
-
   const[products,setProduct] = useState([]);
   useEffect(()=>{
     const fetchProduct = async()=>{
@@ -93,6 +93,32 @@ const AdminDashboard = () => {
     }
     fetchProduct();
   },[activeTab,token]);
+
+  const handleApprove = async(id)=>{
+    try {
+      const res = await axios.put(`http://localhost:5000/api/v1/admin/manageProduct/approveProduct/${id}`,{},{
+        headers:{Authorization:`Bearer ${token}`}
+      });
+      setProduct((prev)=>prev.map((p)=>p._id === id ? { ...p,isapproved:true}:p));
+      toast.success("Product Approved Successfully");
+    } catch (error) {
+      console.log(error.response?.data?.error);
+      toast.error("Faild to Approve Product");
+    }
+  }
+
+  const handleRejectProduct = async(id)=>{
+    try {
+      const res = await axios.put(`http://localhost:5000/api/v1/admin/manageProduct/rejectProduct/${id}`,{},{
+        headers : {Authorization : `Bearer ${token}`}
+      });
+      setProduct((prev)=>prev.map((p)=>p._id === id ? {...p,isapproved:false} : p));
+      toast.success("Product Rejected Successfully");
+    } catch (error) {
+      console.log(error.res?.data?.error);
+      toast.error("Faild to Reject Product");
+    }
+  }
 
 
   return (
@@ -272,9 +298,6 @@ const AdminDashboard = () => {
   <>
     <div className="flex justify-between items-center mb-6">
       <h1 className="text-3xl font-bold">Manage Products</h1>
-      <button className="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg shadow-md transition">
-        <PlusCircle size={18} /> Add Product
-      </button>
     </div>
 
     <div className="overflow-x-auto bg-white rounded-lg shadow-md">
@@ -319,12 +342,19 @@ const AdminDashboard = () => {
                   </span>
                 </td>
                 <td className="px-4 py-8 flex gap-2">
-                  <button className="flex items-center gap-1 bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded-lg">
-                     Approve
-                  </button>
-                  <button className="flex items-center gap-1 bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg">
+                  { product.isapproved ? 
+                  (<button onClick={()=>{handleRejectProduct(product._id)}} className="flex items-center gap-1 bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg">
                      Reject
-                  </button>
+                  </button>):(
+                    <>
+                      <button onClick={()=>{handleApprove(product._id)}} className="flex items-center gap-1 bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded-lg">
+                        Approve
+                      </button>
+                      <button onClick={()=>{handleRejectProduct(product._id)}} className="flex items-center gap-1 bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg">
+                        Reject
+                      </button>
+                  </>
+                )}
                 </td>
               </tr>
             ))}

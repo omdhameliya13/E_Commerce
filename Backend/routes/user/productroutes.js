@@ -5,6 +5,6 @@ const {protect} = require('../../middleware/authmiddleware');
 
 const router = express.Router();
 
-router.get('/getProduct',protect,product.getproduct);
+router.get('/getProduct',product.getproduct);
 
 module.exports = router;

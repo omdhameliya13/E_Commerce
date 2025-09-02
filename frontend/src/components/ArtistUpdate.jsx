@@ -195,7 +195,7 @@ const Artist = () => {
               />
               {id && typeof formData.image === "string" && (
                 <img
-                src={formData.image}
+                src={ `http://localhost:5000/${formData.image}`}
                 alt="Current product"
                 className="mt-2 w-32 h-32 object-cover rounded-lg border"
                 />

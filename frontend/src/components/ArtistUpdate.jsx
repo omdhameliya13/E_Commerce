@@ -1,24 +1,56 @@
 import axios from "axios";
-import React,{useState} from "react";
-import { Link,useNavigate } from "react-router-dom";
+import React,{useEffect, useState} from "react";
+import { Link,useNavigate, useParams } from "react-router-dom";
 import toast from "react-hot-toast";
 
 const Artist = () => {
-      const [formData, setFormData] = useState({ name: '', description: '',price:'',category:'',stock:'',image:null});
+      const{id} = useParams();
       const navigate = useNavigate();
+      const token = localStorage.getItem("token");
+      const [formData, setFormData] = useState({ name: '', description: '',price:'',category:'',stock:'',image:null});
+      
+      useEffect(()=>{
+        const fetchProduct = async()=>{
+            if(id)
+            {
+            try {
+                const res = await axios.get(`http://localhost:5000/api/v1/artist/product/getProductById/${id}`,
+                {
+                    headers: { Authorization: `Bearer ${token}` },
+                }
+            );
+            setFormData({
+                name: res.data.name,
+                description: res.data.description,
+                price: res.data.price,
+                category: res.data.category,
+                stock: res.data.stock,
+                image: res.data.image||null,
+            });
+            }
+            catch(error){
+                console.error(err.response?.data?.error || err.message);
+                toast.error("Failed to fetch product details");
+            }
+        }
+    };
+    fetchProduct();
+    },[id,token]);
     
       const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
       const handleFileChange = (e) =>setFormData({ ...formData, image: e.target.files[0] });
 
       const handleSubmit = async (e) => {
       e.preventDefault();
-      if (!formData.name || !formData.description || !formData.category || !formData.price || !formData.image || !formData.stock) {
+      if (!formData.name || !formData.description || !formData.category || !formData.price || !formData.stock) {
         //return toast.error('All fields are required');
-        toast.success('All fields are required');
+        toast.error('All fields are required');
+        return;
       }
-      const token = localStorage.getItem("token");
+      //const token = localStorage.getItem("token");
       if(!token){
         toast.error("Login again");
+        return;
       }
       try {
           const data = new FormData();
@@ -27,19 +59,27 @@ const Artist = () => {
           data.append("category", formData.category);
           data.append("price", formData.price);
           data.append("stock", formData.stock);
-          data.append("image", formData.image);
+           if (formData.image instanceof File) {
+                // New uploaded file
+                data.append("image", formData.image);
+            } else if (typeof formData.image === "string") {
+                // Existing image path
+                data.append("image", formData.image);
+            }
+          
+           await axios.put(
+            `http://localhost:5000/api/v1/artist/product/updateProduct/${id}`,
+            data,
+            { headers: { Authorization: `Bearer ${token}` } }
+            );
 
-          const res = await axios.post('http://localhost:5000/api/v1/artist/product/addProduct', data,{headers:{
-          Authorization: `Bearer ${token}`
-        }});
-        //toast.success(res.data.message);
-        toast.success('Product Add Successfully')
+            toast.success("Product updated successfully");
+            navigate("/artistdashboard");
         
-        navigate('/artistdashboard');
       } catch (err) {
         console.log(err.response?.data?.error)
-        toast.error("Faild to add Product");
-        //toast.error(err.response?.data?.error || 'Login failed');
+        toast.error("Faild to Update Product");
+        
       }
     };
 
@@ -60,7 +100,7 @@ const Artist = () => {
         {/* Add Product Form */}
         <div className="bg-white shadow-lg rounded-2xl p-8 w-full max-w-2xl">
           <h2 className="text-2xl font-bold text-gray-800 text-center mb-6">
-            Add New Product
+            Update Product
           </h2>
 
           <form className="space-y-5" onSubmit={handleSubmit}>
@@ -72,6 +112,7 @@ const Artist = () => {
               <input
                 type="text"
                 placeholder="Enter product name"
+                value={formData.name}
                 name="name"
                 onChange={handleChange}
                 className="w-full mt-1 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
@@ -87,6 +128,7 @@ const Artist = () => {
               <textarea
                 placeholder="Enter product description"
                 rows="3"
+                value={formData.description}
                 name="description"
                 onChange={handleChange}
                 className="w-full mt-1 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
@@ -97,6 +139,7 @@ const Artist = () => {
             <div>
               <label className="block text-gray-700 font-medium">Category</label>
               <select
+                value={formData.category}
                 name="category"
                 onChange={handleChange}
                 className="w-full mt-1 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
@@ -115,6 +158,7 @@ const Artist = () => {
               <label className="block text-gray-700 font-medium">Price (₹)</label>
               <input
                 type="number"
+                value={formData.price}
                 placeholder="Enter price"
                 name="price"
                 onChange={handleChange}
@@ -129,6 +173,7 @@ const Artist = () => {
               <input
                 type="Number"
                 placeholder="Enter available stock"
+                value={formData.stock}
                 name="stock"
                 onChange={handleChange}
                 className="w-full mt-1 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
@@ -148,6 +193,13 @@ const Artist = () => {
                 className="w-full mt-1 p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                 required
               />
+              {id && typeof formData.image === "string" && (
+                <img
+                src={ `http://localhost:5000/${formData.image}`}
+                alt="Current product"
+                className="mt-2 w-32 h-32 object-cover rounded-lg border"
+                />
+          )}
             </div>
 
             {/* Submit Button */}
@@ -155,7 +207,7 @@ const Artist = () => {
               type="submit"
               className="w-full bg-blue-500 text-white py-3 rounded-lg hover:bg-blue-600 transition duration-300"
             >
-              Add Product
+              Update Product
             </button>
           </form>
         </div>

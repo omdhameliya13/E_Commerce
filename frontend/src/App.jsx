@@ -14,6 +14,7 @@ import Adminlogin from './components/Adminlogin';
 import Adminsignup from './components/Adminsignup';
 import Pendingorders from './components/Pendingorders';
 import Completeorders from './components/Completeorders'
+import ArtistUpdate from './components/ArtistUpdate';
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
         <Route path="/register-artist" element={<Artistregisterpage />} />
         <Route path="/login-artist" element={<Artistloginpage />} />
         <Route path="/artist" element={<Artist />} />
+        <Route path="/artistupdate/:id" element={<ArtistUpdate />} />
         <Route path="/artistdashboard" element={<Artistdashboard />} />
         <Route path="/allorders" element={<AllOrders />} />
 
@@ -41,7 +43,9 @@ function App() {
         {/* Orders */}
         <Route path="/pendingorders" element={<Pendingorders/>} />
         <Route path="/completeorders" element={<Completeorders/>} />
+        
       </Routes>
+      <Toaster position='bottom-right' toastOptions={{style:{fontSize:"16px",padding:"16px 20px",borderRedius:"10px"}}} reverseOrder="false"></Toaster>
     </Router>
   );
 }

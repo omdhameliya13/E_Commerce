@@ -1,8 +1,10 @@
-import React from 'react';
+import React,{useState,useEffect} from 'react';
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { Link } from "react-router-dom";
+import axios from 'axios';
+import toast from 'react-hot-toast';
 
 const Homeuser = () => {
   const settings = {
@@ -12,6 +14,23 @@ const Homeuser = () => {
     slidesToShow: 3,
     slidesToScroll: 3
     };
+
+    const[product,setProduct] = useState([]);
+    const token = localStorage.getItem('token');
+    useEffect(()=>{
+      const fetchProduct = async()=>{
+        try {
+          const res = await axios.get("http://localhost:5000/api/v1/user/product/getProduct");
+          console.log(res.data);
+          setProduct(res.data);
+        } catch (error) {
+          console.log(error.res?.data?.error);
+          toast.error("Faild to fetch product");
+        }
+
+      }
+      fetchProduct();
+    },[]);
 
 
   return (
@@ -85,50 +104,13 @@ const Homeuser = () => {
 
 <div className='p-14'>
   <Slider {...settings}>
-    {[
-      {
-        img: "photos/nike.jpg",
-        name: "Nike Air Zoom",
-        price: "₹2500",
-        desc: "High-quality running shoes for maximum comfort."
-      },
-      {
-        img: "https://via.placeholder.com/200x150.png?text=Adidas+Ultraboost",
-        name: "Adidas Ultraboost",
-        price: "₹3000",
-        desc: "Stylish sneakers designed for speed and comfort."
-      },
-      {
-        img: "https://via.placeholder.com/200x150.png?text=Puma+Future+Rider",
-        name: "Puma Future Rider",
-        price: "₹2200",
-        desc: "Classic retro sneakers with modern design."
-      },
-      {
-        img: "https://via.placeholder.com/200x150.png?text=Reebok+Classic",
-        name: "Reebok Classic",
-        price: "₹1800",
-        desc: "Comfortable and durable everyday sneakers."
-      },
-      {
-        img: "https://via.placeholder.com/200x150.png?text=Converse+All+Star",
-        name: "Converse All Star",
-        price: "₹2000",
-        desc: "Timeless design with versatile style."
-      },
-      {
-        img: "https://via.placeholder.com/200x150.png?text=Vans+Old+Skool",
-        name: "Vans Old Skool",
-        price: "₹2100",
-        desc: "Skate shoes with iconic side stripe design."
-      }
-    ].map((product, index) => (
-      <div key={index} className="px-5">
+    {product.map((p) => (
+      <div key={p._id} className="px-5">
         <div className='border-2 border-solid border-black rounded-md p-4 flex flex-col items-center'>
-          <img src={product.img} alt={product.name} className="w-40 h-40 object-cover mb-4 rounded-md"/>
-          <h2 className="text-lg font-bold">{product.name}</h2>
-          <p className="text-gray-700 font-semibold">{product.price}</p>
-          <p className="text-gray-500 text-sm text-center mb-3">{product.desc}</p>
+          <img src={p.image ? `http://localhost:5000/${p.image}` : null} alt={p.name} className="w-40 h-40 object-cover mb-4 rounded-md"/>
+          <h2 className="text-lg font-bold">{p.name}</h2>
+          <p className="text-gray-700 font-semibold">{p.price}</p>
+          <p className="text-gray-500 text-sm text-center mb-3">{p.description}</p>
           <button className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition">
             Add to Cart
           </button>

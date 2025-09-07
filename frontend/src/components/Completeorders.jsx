@@ -1,5 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const completeOrders = [
   { code: "SHOE-002", company: "Adidas", qty: 1, price: 3000, total: 3000, status: "Complete" },

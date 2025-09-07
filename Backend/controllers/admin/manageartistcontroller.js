@@ -5,7 +5,8 @@ const Artist = require('../../models/artist');
 
 const getAllArtist = async(req,res)=>{
     try {
-        const artists = await Artist.find();
+        const artists = await Artist.find()
+
         if(!artists){
            return res.status(404).json({message:"Artist not found !"});
         }
@@ -17,13 +18,13 @@ const getAllArtist = async(req,res)=>{
 }
 
 
-const getUnVerifiedArtist = async(req,res)=>{
+const getArtistById = async(req,res)=>{
     try {
-        const artists = await Artist.find({isverified:false});
-        if(!artists){
+        const artist = await Artist.findById(req.params.id);
+        if(!artist){
            return res.status(404).json({message:"Artist not found !"});
         }
-        return res.status(200).json({artists});
+        return res.status(200).json({artist});
         
     } catch (error) {
         return res.status(500).json({message:"Server Error",error});
@@ -58,4 +59,4 @@ const rejectArtist = async(req,res)=>{
     }
 }
 
-module.exports = {getAllArtist,getUnVerifiedArtist,verifyArtist,rejectArtist};
+module.exports = {getAllArtist,getArtistById,verifyArtist,rejectArtist};

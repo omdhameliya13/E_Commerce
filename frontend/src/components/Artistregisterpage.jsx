@@ -1,6 +1,7 @@
 import React,{useState} from 'react';
 import axios from 'axios';
 import { Link,useNavigate } from "react-router-dom";
+import toast from 'react-hot-toast';
 
 const Artistregisterpage = () => {
     const [formData, setFormData] = useState({ name: '', email: '', password: '' });
@@ -10,22 +11,33 @@ const Artistregisterpage = () => {
     
         const handleSubmit = async (e) => {
             e.preventDefault();
-                if (!formData.name || !formData.email || !formData.password) {
-                window.alert("all feild req");
-                //return toast.error('All fields are required');
                 
-    
+            if(!formData.name){
+                toast.error("Please fill Username")
             }
+            if(!formData.email){
+                toast.error("Please fill Email")
+            }
+            if(!formData.password){
+                toast.error("Please fill Password")
+            }
+            
             try {
                 //console.log("Sending data:", formData);
                 const res = await axios.post('http://localhost:5000/api/v1/artist/auth/register', formData);
-                window.alert("Signup Successfully");
+                toast.success("Signup Successfully");
                 //toast.success(res.data.message);
                 navigate('/login-artist');
-            } catch (err) {
-                console.log("Signup failed");
-                window.alert("Signup failed")
-                //toast.error(err.response?.data?.error || 'Signup failed');
+            } catch (error) {
+                if(error.response){
+                if(error.response.status === 400){
+                    toast.error("User already registered with this email");
+                }
+                else{
+                    console.log(error);
+                    toast.error(error.response?.data?.error ||"Signup Faild");
+                }
+      }
                 
             }
         }

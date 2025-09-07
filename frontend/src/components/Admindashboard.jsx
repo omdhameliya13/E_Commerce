@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { Link } from "react-router-dom";
 import {
   LayoutDashboard,
@@ -11,29 +11,10 @@ import {
   Edit,
   Trash2,
 } from "lucide-react";
-
+import axios from "axios";
+import toast from "react-hot-toast";
 const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
-
-  // Dummy Data
-  const products = [
-    {
-      id: 1,
-      name: "Nike Air Zoom",
-      price: 2500,
-      stock: 10,
-      img: "https://via.placeholder.com/150x100.png?text=Nike+Air+Zoom",
-      status: "Active",
-    },
-    {
-      id: 2,
-      name: "Adidas Ultraboost",
-      price: 3000,
-      stock: 8,
-      img: "https://via.placeholder.com/150x100.png?text=Adidas+Ultraboost",
-      status: "Inactive",
-    },
-  ];
 
   const orders = [
     { id: 1, customer: "John Doe", total: "₹5000", status: "Pending" },
@@ -41,11 +22,104 @@ const AdminDashboard = () => {
     { id: 3, customer: "Mike Ross", total: "₹2000", status: "Pending" },
   ];
 
-  const users = [
-    { id: 1, name: "John Doe", email: "john@example.com", role: "Customer", status: "Verified" },
-    { id: 2, name: "Jane Smith", email: "jane@example.com", role: "Admin", status: "Unverified" },
-    { id: 3, name: "Mike Ross", email: "mike@example.com", role: "Customer", status: "Verified" },
-  ];
+  const [artist,setArtist] = useState([]);
+  const token = localStorage.getItem('token');
+  useEffect(()=>{
+    const fetchArtist = async()=>{
+      try {
+        if(!token){
+          toast.error("token not found, Login first");
+          return;
+        }
+        const res = await axios.get(`http://localhost:5000/api/v1/admin/manageArtist/getAllArtist`,{
+          headers:{Authorization: `Bearer ${token}`}
+        });
+        console.log("API RESponse",res.data);
+        
+        setArtist(res.data.artists);
+      } catch (error) {
+        console.log(error.response?.data?.error || error.message);
+        toast.error("Faild to load Artist");
+        setArtist([]);
+      }
+      
+    };
+    fetchArtist();
+  },[activeTab,token]);
+
+  const handleVerify = async(id)=>{
+    try {
+      const res = await axios.put(`http://localhost:5000/api/v1/admin/manageArtist/verifyArtist/${id}`,{},{
+        headers:{Authorization:`Bearer ${token}`}
+      });
+      setArtist((prev)=>prev.map((a)=> a._id===id ?{ ...a,isverified:true}:a));
+      toast.success('Artist Verified');
+    } catch (error) {
+      console.log(error.res?.data?.error);
+      toast.error("Faild to verify Artist");
+    }
+  }
+
+  const handleReject = async(id) =>{
+    try {
+      const res = await axios.put(`http://localhost:5000/api/v1/admin/manageArtist/rejectArtist/${id}`,{},{
+        headers : {Authorization : `Bearer ${token}`}
+      });
+      setArtist((prev)=>prev.map((a)=>a._id === id ? { ...a,isverified:false}:a));
+      toast.success("Artist Rejected");
+    } catch (error) {
+      console.log(error.res?.data?.error);
+      toast.error("Faild to Reject Artist");
+    }
+  }
+
+
+  const[products,setProduct] = useState([]);
+  useEffect(()=>{
+    const fetchProduct = async()=>{
+      try {
+        const res = await axios.get("http://localhost:5000/api/v1/admin/manageProduct/getAllProduct",{
+          headers:{
+            Authorization: `Bearer ${token}`,
+          }
+        });
+        console.log("API RESponse",res.data);
+        setProduct(res.data.product);
+      } catch (error) {
+        console.log(error.response?.data?.error ||error.message);
+        toast.error("Unable to fetch Product");
+        setProduct([]);
+      }
+    }
+    fetchProduct();
+  },[activeTab,token]);
+
+  const handleApprove = async(id)=>{
+    try {
+      const res = await axios.put(`http://localhost:5000/api/v1/admin/manageProduct/approveProduct/${id}`,{},{
+        headers:{Authorization:`Bearer ${token}`}
+      });
+      setProduct((prev)=>prev.map((p)=>p._id === id ? { ...p,isapproved:true}:p));
+      toast.success("Product Approved Successfully");
+    } catch (error) {
+      console.log(error.response?.data?.error);
+      toast.error("Faild to Approve Product");
+    }
+  }
+
+  const handleRejectProduct = async(id)=>{
+    try {
+      const res = await axios.put(`http://localhost:5000/api/v1/admin/manageProduct/rejectProduct/${id}`,{},{
+        headers : {Authorization : `Bearer ${token}`}
+      });
+      setProduct((prev)=>prev.map((p)=>p._id === id ? {...p,isapproved:false} : p));
+      toast.success("Product Rejected Successfully");
+    } catch (error) {
+      console.log(error.res?.data?.error);
+      toast.error("Faild to Reject Product");
+    }
+  }
+
 
   return (
     <div className="flex min-h-screen bg-gray-100">
@@ -165,114 +239,142 @@ const AdminDashboard = () => {
             <th className="px-4 py-3 text-left">Action</th>
           </tr>
         </thead>
+
         <tbody>
-          {users.map((user) => (
-            <tr
-              key={user.id}
-              className="border-b hover:bg-gray-50 transition"
-            >
-              <td className="px-4 py-3">{user.name}</td>
-              <td className="px-4 py-3">{user.email}</td>
-              <td className="px-4 py-3">{user.role}</td>
-              <td className="px-4 py-3">
-                <span
-                  className={`px-3 py-1 rounded-full text-sm font-medium ${
-                    user.status === "Verified"
-                      ? "bg-green-100 text-green-600"
-                      : "bg-yellow-100 text-yellow-600"
-                  }`}
-                >
-                  {user.status}
-                </span>
-              </td>
-              <td className="px-4 py-3 flex gap-2">
-                {/* Conditional buttons based on user status */}
-                {user.status === "Verified" ? (
-                  <button className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg shadow">
-                    Reject
-                  </button>
-                ) : (
-                  <>
-                    <button className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded-lg shadow">
-                      Approve
-                    </button>
-                    <button className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg shadow">
+          {artist.length > 0 ? (
+            artist.map((a) => (
+              <tr key={a._id} className="border-b hover:bg-gray-50 transition">
+                <td className="px-4 py-3">{a.name}</td>
+                <td className="px-4 py-3">{a.email}</td>
+                <td className="px-4 py-3">{a.BusinessRole}</td>
+                <td className="px-4 py-3">
+                  <span
+                    className={`px-3 py-1 rounded-full text-sm font-medium ${
+                      a.isverified
+                        ? "bg-green-100 text-green-600"
+                        : "bg-yellow-100 text-yellow-600"
+                    }`}
+                  >
+                    {a.isverified ? "Verified" : "Unverified"}
+                  </span>
+                </td>
+                <td className="px-4 py-3 flex gap-2">
+                  {a.isverified ? (
+                    <button onClick={()=>{handleReject(a._id)}} className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg shadow">
                       Reject
                     </button>
-                  </>
-                )}
+                  ) : (
+                    <>
+                      <button onClick={()=>{handleVerify(a._id)}} className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded-lg shadow">
+                        Verify
+                      </button>
+                      <button onClick={()=>{handleReject(a._id)}} className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg shadow">
+                        Reject
+                      </button>
+                    </>
+                  )}
+                </td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td
+                colSpan="5"
+                className="text-center py-6 text-gray-500"
+              >
+                🚫 No users found
               </td>
             </tr>
-          ))}
+          )}
         </tbody>
       </table>
     </div>
   </>
 )}
 
+
         {/* Products */}
         {activeTab === "products" && (
-          <>
-            <div className="flex justify-between items-center mb-6">
-              <h1 className="text-3xl font-bold">Manage Products</h1>
-              <button className="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg shadow-md transition">
-                <PlusCircle size={18} /> Add Product
-              </button>
-            </div>
-            <div className="overflow-x-auto bg-white rounded-lg shadow-md">
-              <table className="w-full table-auto">
-                <thead className="bg-blue-600 text-white">
-                  <tr>
-                    <th className="px-4 py-3 text-left">Image</th>
-                    <th className="px-4 py-3 text-left">Name</th>
-                    <th className="px-4 py-3 text-left">Price</th>
-                    <th className="px-4 py-3 text-left">Stock</th>
-                    <th className="px-4 py-3 text-left">Status</th>
-                    <th className="px-4 py-3 text-left">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {products.map((product) => (
-                    <tr
-                      key={product.id}
-                      className="border-b hover:bg-gray-50 transition"
-                    >
-                      <td className="px-4 py-3">
-                        <img
-                          src={product.img}
-                          alt={product.name}
-                          className="w-16 h-16 object-cover rounded-md"
-                        />
-                      </td>
-                      <td className="px-4 py-3">{product.name}</td>
-                      <td className="px-4 py-3">₹{product.price}</td>
-                      <td className="px-4 py-3">{product.stock}</td>
-                      <td className="px-4 py-3">
-                        <span
-                          className={`px-3 py-1 rounded-full text-sm font-medium ${
-                            product.status === "Active"
-                              ? "bg-green-100 text-green-600"
-                              : "bg-red-100 text-red-600"
-                          }`}
-                        >
-                          {product.status}
-                        </span>
-                      </td>
-                      <td className="px-4 py-3 flex gap-2">
-                        <button className="flex items-center gap-1 bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded-lg">
-                          <Edit size={16} /> Edit
-                        </button>
-                        <button className="flex items-center gap-1 bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg">
-                          <Trash2 size={16} /> Delete
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </>
+  <>
+    <div className="flex justify-between items-center mb-6">
+      <h1 className="text-3xl font-bold">Manage Products</h1>
+    </div>
+
+    <div className="overflow-x-auto bg-white rounded-lg shadow-md">
+      <table className="w-full table-auto">
+        <thead className="bg-blue-600 text-white">
+          <tr>
+            <th className="px-4 py-3 text-left">Image</th>
+            <th className="px-4 py-3 text-left">Name</th>
+            <th className="px-4 py-3 text-left">Price</th>
+            <th className="px-4 py-3 text-left">Stock</th>
+            <th className="px-4 py-3 text-left">Status</th>
+            <th className="px-4 py-3 text-left">Actions</th>
+          </tr>
+        </thead>
+
+        {products.length > 0 ? (
+          <tbody>
+            {products.map((product) => (
+              <tr
+                key={product._id}
+                className="border-b hover:bg-gray-50 transition"
+              >
+                <td className="px-4 py-3">
+                  <img
+                    src={product.image ? `http://localhost:5000/${product.image}`:null }
+                    alt={product.name}
+                    className="w-16 h-16 object-cover rounded-md"
+                  />
+                </td>
+                <td className="px-4 py-3">{product.name}</td>
+                <td className="px-4 py-3">₹{product.price}</td>
+                <td className="px-4 py-3">{product.stock}</td>
+                <td className="px-4 py-3">
+                  <span
+                    className={`px-3 py-1 rounded-full text-sm font-medium ${
+                      product.isapproved
+                        ? "bg-green-100 text-green-600"
+                        : "bg-red-100 text-red-600"
+                    }`}
+                  >
+                    {product.isapproved ? "Approved" : "Pending"}
+                  </span>
+                </td>
+                <td className="px-4 py-8 flex gap-2">
+                  { product.isapproved ? 
+                  (<button onClick={()=>{handleRejectProduct(product._id)}} className="flex items-center gap-1 bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg">
+                     Reject
+                  </button>):(
+                    <>
+                      <button onClick={()=>{handleApprove(product._id)}} className="flex items-center gap-1 bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded-lg">
+                        Approve
+                      </button>
+                      <button onClick={()=>{handleRejectProduct(product._id)}} className="flex items-center gap-1 bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg">
+                        Reject
+                      </button>
+                  </>
+                )}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        ) : (
+          <tbody>
+            <tr>
+              <td
+                colSpan="6"
+                className="text-center py-6 text-gray-500"
+              >
+                🚫 No Products found
+              </td>
+            </tr>
+          </tbody>
         )}
+      </table>
+    </div>
+  </>
+)}
 
         {/* Orders */}
         {activeTab === "orders" && (

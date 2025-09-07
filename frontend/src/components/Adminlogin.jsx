@@ -1,8 +1,46 @@
-import React from "react";
+import React,{useState} from "react";
 import { Lock, User } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link ,useNavigate} from "react-router-dom";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 const Adminlogin = () => {
+  
+  const[formData,setFormData] = useState({email:'',password:''});
+  const navigate = useNavigate();
+
+  const handleChange = (e) => setFormData({ ...formData,[e.target.name]:e.target.value});
+
+  const handleSubmit = async(e)=>{
+    e.preventDefault();
+
+    if(!formData.email){
+      window.alert("Please fill Email")
+    }
+    if(!formData.password){
+      window.alert("Please fill Password")
+    }
+
+    try {
+      const res = await axios.post("http://localhost:5000/api/v1/admin/auth/login",formData);
+      localStorage.setItem('token',res.data.token);
+      toast.success("Admin Login Successfully");
+      navigate("/admindashboard")
+    } catch (error) {
+      if(error.response){
+        if(error.response.status === 404){
+          toast.error("User not Found, Register first ");
+        }
+        else if(error.response.status === 401){
+          toast.error("Invalid Password");
+        }
+        else{
+          toast.error(error.response?.data?.error || "Login Faild");
+        }
+      }
+    }
+  }
+
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
@@ -10,7 +48,7 @@ const Adminlogin = () => {
           Admin Login
         </h1>
 
-        <form className="flex flex-col gap-4">
+        <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
           <div>
             <label className="block text-gray-700 mb-1">Email</label>
             <div className="flex items-center border rounded-lg overflow-hidden">
@@ -18,6 +56,8 @@ const Adminlogin = () => {
               <input
                 type="email"
                 placeholder="admin@example.com"
+                name="email"
+                onChange={handleChange}
                 className="flex-1 px-2 py-2 outline-none"
               />
             </div>
@@ -30,6 +70,8 @@ const Adminlogin = () => {
               <input
                 type="password"
                 placeholder="********"
+                name="password"
+                onChange={handleChange}
                 className="flex-1 px-2 py-2 outline-none"
               />
             </div>

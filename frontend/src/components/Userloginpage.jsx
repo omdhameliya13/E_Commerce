@@ -1,6 +1,7 @@
 import React,{useState} from 'react';
 import { Link,useNavigate } from "react-router-dom";
 import axios from 'axios';
+import toast from 'react-hot-toast';
 
 const Userloginpage = () => {
     const [formData, setFormData] = useState({ email: '', password: ''});
@@ -10,21 +11,35 @@ const Userloginpage = () => {
   
     const handleSubmit = async (e) => {
       e.preventDefault();
-      if (!formData.email || !formData.password) {
-        //return toast.error('All fields are required');
-        window.alert('All fields are required');
+
+      if(!formData.email){
+        toast.error("Please fill Email")
       }
+      if(!formData.password){
+        toast.error("Please fill Password")
+      }
+
       try {
         const res = await axios.post('http://localhost:5000/api/v1/user/auth/login', formData);
-        //toast.success(res.data.message);
-        window.alert('Logged in Successfuly')
+        toast.success("Logged in Successfuly");
+        //window.alert('Logged in Successfuly')
         localStorage.setItem('token', res.data.token);
         console.log(res.data.token);
         navigate('/');
-      } catch (err) {
-        console.log(err.response?.data?.error)
-        window.alert("Login failed");
-        //toast.error(err.response?.data?.error || 'Login failed');
+      } catch (error) {
+        if(error.response){
+          if(error.response.status === 404){
+            //window.alert("User not Found, Register first ");
+            toast.error("User not Found, Register first ");
+          }
+          else if(error.response.status === 401){
+            //window.alert("Invalid Password");
+            toast.error("Invalid Password");
+          }
+          else{
+            toast.error(error.response?.data?.error || "Login Faild")
+          }
+        }
       }
     };
     return(

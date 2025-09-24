@@ -15,6 +15,9 @@ import Adminsignup from './components/Adminsignup';
 import Pendingorders from './components/Pendingorders';
 import Completeorders from './components/Completeorders'
 import ArtistUpdate from './components/ArtistUpdate';
+import Userprofile from './components/Userprofile';
+import Cart from './components/Cart';
+import Order from './components/Order'
 
 function App() {
   return (
@@ -26,6 +29,7 @@ function App() {
         {/* User Pages */}
         <Route path="/register-user" element={<Userregisterpage />} />
         <Route path="/login-user" element={<Userloginpage />} />
+        <Route path="/user-profile" element={<Userprofile />} />
 
         {/* Artist Pages */}
         <Route path="/register-artist" element={<Artistregisterpage />} />
@@ -43,7 +47,12 @@ function App() {
         {/* Orders */}
         <Route path="/pendingorders" element={<Pendingorders/>} />
         <Route path="/completeorders" element={<Completeorders/>} />
+        <Route path="/order" element={<Order/>} />
+
         
+        {/* cart page */}
+        <Route path="/cart" element={<Cart/>} />
+
       </Routes>
       <Toaster position='bottom-right' toastOptions={{style:{fontSize:"16px",padding:"16px 20px",borderRedius:"10px"}}} reverseOrder="false"></Toaster>
     </Router>

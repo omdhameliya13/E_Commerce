@@ -5,12 +5,28 @@ const Artist = require('../../models/artist');
 
 const getAllArtist = async(req,res)=>{
     try {
-        const artists = await Artist.find()
+        const {page,limit,filter} = req.query;
+        let pageValue = parseInt(page) || 1;
+        let limitValue = parseInt(limit) || 5;
+        let skipValue = (pageValue - 1)*limitValue; 
 
-        if(!artists){
+        let query = {};
+        if(filter==="verified"){
+            query.isverified = true;
+        }
+        if(filter==="unverified"){
+            query.isverified = false;
+        }
+
+        const countTotal = await Artist.countDocuments(query);
+        const totalPages = Math.ceil(countTotal/limitValue);
+
+        const artists = await Artist.find(query).skip(skipValue).limit(limitValue);
+
+        if(!artists || artists.length === 0){
            return res.status(404).json({message:"Artist not found !"});
         }
-        return res.status(200).json({artists});
+        return res.status(200).json({artists,totalPages,page,countTotal});
         
     } catch (error) {
         return res.status(500).json({message:"Server Error",error});

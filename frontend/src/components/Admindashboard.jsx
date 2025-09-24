@@ -23,19 +23,24 @@ const AdminDashboard = () => {
   ];
 
   const [artist,setArtist] = useState([]);
+  const [page,setPage] = useState(1);
+  const [totalPages,setTotalPages] = useState(1);
+  const [filter,setFilter] = useState("all");
   const token = localStorage.getItem('token');
-  useEffect(()=>{
+
+    useEffect(()=>{
     const fetchArtist = async()=>{
       try {
         if(!token){
           toast.error("token not found, Login first");
           return;
         }
-        const res = await axios.get(`http://localhost:5000/api/v1/admin/manageArtist/getAllArtist`,{
+        
+        const res = await axios.get(`http://localhost:5000/api/v1/admin/manageArtist/getAllArtist/?page=${page}&limit=5&filter=${filter}`,{
           headers:{Authorization: `Bearer ${token}`}
         });
         console.log("API RESponse",res.data);
-        
+        setTotalPages(res.data.totalPages);
         setArtist(res.data.artists);
       } catch (error) {
         console.log(error.response?.data?.error || error.message);
@@ -45,7 +50,7 @@ const AdminDashboard = () => {
       
     };
     fetchArtist();
-  },[activeTab,token]);
+  },[activeTab,token,page,filter]);
 
   const handleVerify = async(id)=>{
     try {
@@ -67,23 +72,28 @@ const AdminDashboard = () => {
       });
       setArtist((prev)=>prev.map((a)=>a._id === id ? { ...a,isverified:false}:a));
       toast.success("Artist Rejected");
+      
     } catch (error) {
       console.log(error.res?.data?.error);
       toast.error("Faild to Reject Artist");
     }
   }
 
-
   const[products,setProduct] = useState([]);
+  const [productPage,setProductPage] = useState(1);
+  const [totalProductPages,setTotalProductPages] = useState(1);
+  const [productfilter,setProductFilter] = useState("all");
+
   useEffect(()=>{
     const fetchProduct = async()=>{
       try {
-        const res = await axios.get("http://localhost:5000/api/v1/admin/manageProduct/getAllProduct",{
+        const res = await axios.get(`http://localhost:5000/api/v1/admin/manageProduct/getAllProduct/?productPage=${productPage}&limit=5&productfilter=${productfilter}`,{
           headers:{
             Authorization: `Bearer ${token}`,
           }
         });
         console.log("API RESponse",res.data);
+        setTotalProductPages(res.data.totalPages)
         setProduct(res.data.product);
       } catch (error) {
         console.log(error.response?.data?.error ||error.message);
@@ -92,7 +102,7 @@ const AdminDashboard = () => {
       }
     }
     fetchProduct();
-  },[activeTab,token]);
+  },[activeTab,token,page,productfilter]);
 
   const handleApprove = async(id)=>{
     try {
@@ -144,7 +154,7 @@ const AdminDashboard = () => {
 
           {/* Moved Users to second position */}
           <button
-            onClick={() => setActiveTab("users")}
+            onClick={() => {setActiveTab("users");setPage(1)}}
             className={`flex items-center gap-3 p-3 rounded-lg ${
               activeTab === "users"
                 ? "bg-blue-500 text-white"
@@ -227,7 +237,14 @@ const AdminDashboard = () => {
         {/* Users */}
 {activeTab === "users" && (
   <>
-    <h1 className="text-3xl font-bold mb-6">Manage Users</h1>
+    <div className="flex justify-between items-center mb-4">
+      <h1 className="text-3xl font-bold mb-6">Manage Users</h1>
+      <select value={filter} onChange={(e)=>setFilter(e.target.value)} className="border border-gray-300 rounded-lg px-3 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400">
+        <option value="all">All</option>
+        <option value="verified">Verified</option>
+        <option value="unverified">UnVerified</option>
+      </select>
+    </div>
     <div className="overflow-x-auto bg-white rounded-lg shadow-md">
       <table className="w-full table-auto">
         <thead className="bg-blue-600 text-white">
@@ -268,9 +285,6 @@ const AdminDashboard = () => {
                       <button onClick={()=>{handleVerify(a._id)}} className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded-lg shadow">
                         Verify
                       </button>
-                      <button onClick={()=>{handleReject(a._id)}} className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg shadow">
-                        Reject
-                      </button>
                     </>
                   )}
                 </td>
@@ -289,6 +303,15 @@ const AdminDashboard = () => {
         </tbody>
       </table>
     </div>
+    
+    {/* Pagination */}
+    <div className="flex justify-center items-center gap-4 mt-6">
+        <button disabled={page===1} onClick={()=>setPage((p)=>p-1)} className={`px-4 py-2 rounded-lg shadow ${page === 1 ? "bg-gray-300 cursor-not-allowed" : "bg-blue-500 text-white hover:bg-blue-600"}`}>Previous</button>
+        <span className="text-gray-700 font-medium">
+          Page {page} of {totalPages}
+        </span>
+        <button disabled={page===totalPages} onClick={()=>setPage((p)=>page+1)} className={`px-4 py-2 rounded-lg shadow ${page===totalPages ? "bg-gray-300 cursor-not-allowed" :"bg-blue-500 text-white hover:bg-blue-600"}`}>Next</button>
+    </div>
   </>
 )}
 
@@ -298,6 +321,11 @@ const AdminDashboard = () => {
   <>
     <div className="flex justify-between items-center mb-6">
       <h1 className="text-3xl font-bold">Manage Products</h1>
+      <select value={productfilter} onChange={(e)=>setProductFilter(e.target.value)} className="border border-gray-300 rounded-lg px-3 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400">
+        <option value="all">All</option>
+        <option value="approved">Approved</option>
+        <option value="pending">Pending</option>
+      </select>
     </div>
 
     <div className="overflow-x-auto bg-white rounded-lg shadow-md">
@@ -350,9 +378,6 @@ const AdminDashboard = () => {
                       <button onClick={()=>{handleApprove(product._id)}} className="flex items-center gap-1 bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded-lg">
                         Approve
                       </button>
-                      <button onClick={()=>{handleRejectProduct(product._id)}} className="flex items-center gap-1 bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg">
-                        Reject
-                      </button>
                   </>
                 )}
                 </td>
@@ -373,6 +398,13 @@ const AdminDashboard = () => {
         )}
       </table>
     </div>
+    {/*pagination*/}
+    <div className="flex justify-center items-center gap-4 mt-6">
+      <button disabled={productPage===1} onClick={()=>setProductPage((p)=>p-1)} className={`px-4 py-2 rounded-lg shadow ${productPage === 1 ? "bg-gray-300 cursor-not-allowed" : "bg-blue-500 text-white hover:bg-blue-600"}`}>Previous</button>
+      <span>{productPage} of {totalProductPages}</span>
+      <button disabled={productPage===totalProductPages} onClick={()=>setProductPage((p)=>p+1)} className={`px-4 py-2 rounded-lg shadow ${productPage === totalProductPages ? "bg-gray-300 cursor-not-allowed" : "bg-blue-500 text-white hover:bg-blue-600"}`}>Next</button>
+    </div>
+    
   </>
 )}
 

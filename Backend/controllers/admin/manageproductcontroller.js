@@ -5,11 +5,26 @@ const Product = require('../../models/product');
 
 const getAllProduct = async(req,res)=>{
     try {
-        const product = await Product.find();
+        const {page,limit,productfilter} = req.query;
+        let pageValue = parseInt(page) || 1;
+        let limitValue = parseInt(limit) || 5;
+        let skipValue = (pageValue-1)*limitValue;
+
+        let query = {};
+        if(productfilter === "isapproved"){
+            query.isapproved = true;
+        }
+        if(productfilter === "pending"){
+            query.isapproved = false
+        }
+
+        const total = await Product.countDocuments(query);
+        const totalPages = Math.ceil(total/limitValue);
+        const product = await Product.find(query).skip(skipValue).limit(limitValue);
         if(!product){
            return res.status(404).json({message:"Product not found !"});
         }
-        return res.status(200).json({product});
+        return res.status(200).json({product,totalPages,page,total});
         
     } catch (error) {
         return res.status(500).json({message:"Server Error",error});

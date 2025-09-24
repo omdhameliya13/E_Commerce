@@ -36,35 +36,28 @@ const Homeuser = () => {
   return (
     <div>
       <header>
-        <div class="header-container flex justify-evenly bg-slate-800 text-white">
-            <div class="shrink order-1">FREE DELIVERY ON ORDERS OVER Rs.2999</div>
-            <div class="order-2 flex p-2 ">
-              <div className="flex gap-4 justify-center -mt-1 w-40 max-w-sm mx-auto">
-                {/*
-                <Link to="/login-user">
-                <button className="flex-1 px-4 bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition">
-                    Login
-                </button>
-                </Link>
-                <Link to="/register-user">
-                  <button className="flex-1 px-4 bg-green-500 text-white py-2 rounded-lg hover:bg-green-600 transition">
-                    Register
-                  </button>
-                </Link>
-                */}
-                <Link to="#">
-                  <button className="flex-1 bg-green-500 text-white py-2 rounded-lg hover:bg-green-600 transition ">
-                    My Account
-                  </button>
-                  </Link>
-                </div>
-              <div className='flex p-1 px-12'>
-                <button>
-                <ion-icon name="cart" className='p-1 text-2xl'></ion-icon>
-                </button>
-            </div>
-            </div>
-        </div>
+        <div className="header-container flex justify-evenly bg-slate-800 text-white">
+    <div className="shrink order-1">FREE DELIVERY ON ORDERS OVER Rs.2999</div>
+    <div className="order-2 flex p-2 items-center gap-6">
+      {/* Profile Icon */}
+      <div className="flex p-1">
+        <Link to="/user-profile">
+        <button>
+          <ion-icon name="person-circle" class="text-3xl"></ion-icon>
+        </button>
+        </Link>
+      </div>
+
+      {/* Cart Icon */}
+      <div className="flex p-1">
+        <Link to="/cart">
+        <button>
+          <ion-icon name="cart" class="text-2xl"></ion-icon>
+        </button>
+        </Link>
+      </div>
+    </div>
+  </div>
       </header>
       <nav className='flex justify-between items-center w-[92%]'>
         <div className=''>

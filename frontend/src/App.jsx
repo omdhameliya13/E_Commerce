@@ -19,6 +19,7 @@ import Userprofile from './components/Userprofile';
 import Cart from './components/Cart';
 import Order from './components/Order'
 import OrderPlaced from './components/OrderPlaced';
+import ArtistProfile from './components/ArtistProfile';
 
 
 function App() {
@@ -32,7 +33,7 @@ function App() {
         <Route path="/register-user" element={<Userregisterpage />} />
         <Route path="/login-user" element={<Userloginpage />} />
         <Route path="/user-profile" element={<Userprofile />} />
-        <Route path="/artist-profile" element={<Userprofile />} />
+        <Route path="/artist-profile" element={<ArtistProfile />} />
 
         {/* Artist Pages */}
         <Route path="/register-artist" element={<Artistregisterpage />} />

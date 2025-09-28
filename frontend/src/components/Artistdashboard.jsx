@@ -1,13 +1,33 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { ChevronDown, Package, PlusCircle, LogOut } from "lucide-react";
+import { ChevronDown, Package, PlusCircle, LogOut,User } from "lucide-react";
 import axios from "axios";
 import toast from "react-hot-toast";
 
 const Artistdashboard = () => {
-  const [products, setProduct] = useState([]);
+  
   const token = localStorage.getItem("token");
 
+  const [artist,setArtist] = useState(null);
+
+  useEffect(()=>{
+    const fetchArtist = async()=>{
+      try {
+        const res = await axios.get('http://localhost:5000/api/v1/artist/profile/getProfile',{
+        headers:{Authorization:`Bearer ${token}`}
+      })
+      console.log(res.data);
+      setArtist(res.data);
+      } catch (error) {
+        console.log(error.res?.data?.error)
+      }
+    }
+    fetchArtist();
+  },[]);
+
+
+
+  const [products, setProduct] = useState([]);
   useEffect(() => {
     const fetchProduct = async () => {
       try {
@@ -108,7 +128,17 @@ const Artistdashboard = () => {
               >
               Completed Orders
             </Link>
+           
           </div>
+           <div className="mt-4">
+              <Link
+                to="/artist-profile"
+                className="flex items-center gap-3 p-3 rounded-lg hover:bg-blue-100 transition"
+              >
+                <User size={20} />
+                <span className="font-medium">Profile</span>
+              </Link>
+            </div>
         </div>
 
         

@@ -15,11 +15,19 @@ const orederSchema = new mongoose.Schema({
         quantity:{
             type:Number,
             required:true
-        }
+        },
+        /*price:{
+            type:Number,
+            required:true
+        },
+        total:{
+            type:Number,
+            required:true
+        }*/
     }],
-    totalAmount: {
-        type: Number,
-        required: true
+    totalAmount:{
+        type:Number,
+        default:0
     },
     status: {
         type: String,
@@ -34,18 +42,11 @@ const orederSchema = new mongoose.Schema({
         type:String,
         required:true
     },
-    flat_houseno:{
+    email:{
         type:String,
         required:true
     },
-    area:{
-        type:String,
-        required:true
-    },
-    landmark:{
-        type:String
-    },
-    pincode:{
+    address:{
         type:String,
         required:true
     },
@@ -53,6 +54,12 @@ const orederSchema = new mongoose.Schema({
         type:String,
         required:true
     },
+    
+    pincode:{
+        type:String,
+        required:true
+    },
+    
     state:{
         type:String,
         required:true

@@ -12,8 +12,10 @@ import {
   Trash2,
 } from "lucide-react";
 import axios from "axios";
+import {useNavigate} from 'react-router-dom';
 import toast from "react-hot-toast";
 const AdminDashboard = () => {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("dashboard");
 
   const orders = [
@@ -130,6 +132,34 @@ const AdminDashboard = () => {
     }
   }
 
+  
+      const[admin,setAdmin] = useState(null)
+      useEffect(()=>{
+          const fetchAdmin = async()=>{
+              try {
+                  const res = await axios.get('http://localhost:5000/api/v1/admin/profile/getProfile',{
+                  headers:{Authorization:`Bearer ${token}`}
+              });
+              console.log(token,res.data);
+              setAdmin(res.data)
+              } catch (error) {
+                  console.log(error.res?.data?.error)
+                  toast.error("Error to Fetch Details");
+              }
+          }
+          fetchAdmin()
+      },[]);
+  
+      const handleLogout =()=>{
+          localStorage.removeItem('token');
+          setAdmin(null);
+          toast.success("Logged out Successfully");
+          navigate('/Adminlogin');
+      }
+      const handleLogin=()=>{
+          navigate('/Adminlogin');
+      }
+
 
   return (
     <div className="flex min-h-screen bg-gray-100">
@@ -187,7 +217,7 @@ const AdminDashboard = () => {
           </button>
 
           <button
-            onClick={() => setActiveTab("settings")}
+            onClick={() => {setActiveTab("settings")}}
             className={`flex items-center gap-3 p-3 rounded-lg ${
               activeTab === "settings"
                 ? "bg-blue-500 text-white"
@@ -197,11 +227,7 @@ const AdminDashboard = () => {
             <Settings size={20} /> Settings
           </button>
 
-          <Link to="/login-user">
-          <button className="flex items-center gap-3 p-3 rounded-lg hover:bg-red-100 text-red-600 mt-auto">
-            <LogOut size={20} /> Logout
-          </button>
-          </Link>
+          
         </nav>
       </div>
 
@@ -447,6 +473,58 @@ const AdminDashboard = () => {
             </div>
           </>
         )}
+        
+        {
+          activeTab==="settings" &&(
+            <>
+              <div className="max-w-sm mx-auto mt-10 p-6 bg-white rounded-xl shadow-md text-center">
+                <h2 className="text-2xl font-semibold text-gray-800 mb-6">My Profile</h2>
+
+                {admin ? (
+                  <>
+                    <div className="mb-4 text-left">
+                      <label className="block text-sm font-medium text-gray-600 mb-1">
+                        Name
+                      </label>
+                      <input
+                        type="text"
+                        value={admin.name}
+                        readOnly
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      />
+                    </div>
+
+                    <div className="mb-6 text-left">
+                      <label className="block text-sm font-medium text-gray-600 mb-1">
+                        Email
+                      </label>
+                      <input
+                        type="text"
+                        value={admin.email}
+                        readOnly
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      />
+                    </div>
+
+                    <button
+                      onClick={handleLogout}
+                      className="w-full bg-red-500 hover:bg-red-600 text-white font-medium py-2 px-4 rounded-lg transition"
+                    >
+                      Logout
+                    </button>
+                  </>
+                ) : (
+                  <button
+                    onClick={handleLogin}
+                    className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-lg transition"
+                  >
+                    Login
+                  </button>
+                )}
+              </div>
+            </>
+          )}
+        
       </div>
     </div>
   );

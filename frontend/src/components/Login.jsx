@@ -18,7 +18,7 @@ const Login = () => {
     }
     try {
       const res = await axios.post('http://localhost:5000/user/login', formData);
-      toast.success(res.data.message);
+      toast.success("Login Successful");
       localStorage.setItem('token', res.data.token);
       navigate('/dashboard');
     } catch (err) {

@@ -18,6 +18,8 @@ import ArtistUpdate from './components/ArtistUpdate';
 import Userprofile from './components/Userprofile';
 import Cart from './components/Cart';
 import Order from './components/Order'
+import OrderPlaced from './components/OrderPlaced';
+
 
 function App() {
   return (
@@ -30,6 +32,7 @@ function App() {
         <Route path="/register-user" element={<Userregisterpage />} />
         <Route path="/login-user" element={<Userloginpage />} />
         <Route path="/user-profile" element={<Userprofile />} />
+        <Route path="/artist-profile" element={<Userprofile />} />
 
         {/* Artist Pages */}
         <Route path="/register-artist" element={<Artistregisterpage />} />
@@ -52,6 +55,7 @@ function App() {
         
         {/* cart page */}
         <Route path="/cart" element={<Cart/>} />
+        <Route path='/orderPlace' element={<OrderPlaced/>}/>
 
       </Routes>
       <Toaster position='bottom-right' toastOptions={{style:{fontSize:"16px",padding:"16px 20px",borderRedius:"10px"}}} reverseOrder="false"></Toaster>

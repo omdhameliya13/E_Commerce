@@ -2,9 +2,10 @@ import React,{useState,useEffect} from 'react';
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import { Link } from "react-router-dom";
+import { Link ,useNavigate} from "react-router-dom";
 import axios from 'axios';
 import toast from 'react-hot-toast';
+
 
 const Homeuser = () => {
   const settings = {
@@ -14,6 +15,8 @@ const Homeuser = () => {
     slidesToShow: 3,
     slidesToScroll: 3
     };
+
+    const navigate = useNavigate();
 
     const[product,setProduct] = useState([]);
     const token = localStorage.getItem('token');
@@ -32,6 +35,21 @@ const Homeuser = () => {
       fetchProduct();
     },[]);
 
+    const handleAddToCart = async(productId)=>{
+      try {
+        const res = await axios.post('http://localhost:5000/api/v1/user/cart/addToCart',{productId,quantity :1},
+        {headers:{Authorization:`Bearer ${token}`}}
+        )
+        toast.success("Added to Cart")
+        navigate('/cart')
+      } catch (error) {
+        console.log((error.res?.data?.error))
+        toast.error(error.res?.data?.error)
+      }
+
+    }
+
+    
 
   return (
     <div>
@@ -104,7 +122,7 @@ const Homeuser = () => {
           <h2 className="text-lg font-bold">{p.name}</h2>
           <p className="text-gray-700 font-semibold">{p.price}</p>
           <p className="text-gray-500 text-sm text-center mb-3">{p.description}</p>
-          <button className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition">
+          <button onClick={()=>handleAddToCart(p._id)} className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition">
             Add to Cart
           </button>
         </div>
@@ -158,7 +176,7 @@ const Homeuser = () => {
   </div>
 
   <div className="bg-gray-900 text-gray-400 text-center py-4 text-sm">
-    &copy; 2025 Your E-commerce Website. All rights reserved.
+    &copy; copyright @ 2025
   </div>
 </footer>
 

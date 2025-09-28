@@ -6,7 +6,7 @@ const Product = require("../../models/product");
 const createOrder = async(req,res)=>{
     try {
         const userId = req.user.id;
-        const{fullname,mobileno,flat_houseno,area,landmark,pincode,city,state,paymentMethod} = req.body;
+        const{fullname,mobileno,email,address,city,pincode,state,paymentMethod} = req.body;
 
         const cart = await Cart.findOne({userId}).populate("products.productId");
         if(!cart){
@@ -17,6 +17,7 @@ const createOrder = async(req,res)=>{
         cart.products.forEach(product => {
             totalAmount += product.productId.price*product.quantity;
         });
+        totalAmount = totalAmount+199;
 
         const newOrder = new Order({
             userId,
@@ -27,11 +28,10 @@ const createOrder = async(req,res)=>{
             totalAmount,
             fullname,
             mobileno,
-            flat_houseno,
-            area,
-            landmark,
-            pincode,
+            email,
+            address,
             city,
+            pincode,
             state,
             paymentMethod
         });

@@ -13,6 +13,7 @@ const userprofileroutes = require("./user/profileroutes")
 const userOrderroutes = require("./user/orderroutes")
 const userproductroutes = require("./user/productroutes");
 const artistorderroutes = require("./artist/orderroutes");
+const adminorder = require("./admin/orderroutes")
 
 Router.use("/user/auth",userauthroutes);
 Router.use("/user/profile",userprofileroutes);
@@ -29,6 +30,7 @@ Router.use("/admin/auth",adminauthroutes);
 Router.use("/admin/manageArtist",manageArtistroutes);
 Router.use("/admin/manageProduct",manageProductroutes);
 Router.use("/admin/profile",adminprofileroutes);
+Router.use("/admin/orders",adminorder);
 
 
 module.exports = Router;

@@ -24,6 +24,26 @@ const AdminDashboard = () => {
     { id: 3, customer: "Mike Ross", total: "₹2000", status: "Pending" },
   ];
 
+  const [order,setOrder] = useState([]);
+
+  useEffect(()=>{
+    const fetchOrder= async()=>{
+      try {
+        const res = await axios.get("http://localhost:5000/api/v1/admin/orders/getOrders",{
+          headers:{Authorization:`Bearer ${token}`}
+        })
+        console.log(res.data);
+        toast.success("Order Fetch Successfully");
+        setOrder(res.data);
+        
+      } catch (error) {
+        console.log(error.res?.data?.error);
+        toast.error("Faild to Fetch Error");
+      }
+    }
+    fetchOrder();
+  },[activeTab])
+
   const [artist,setArtist] = useState([]);
   const [page,setPage] = useState(1);
   const [totalPages,setTotalPages] = useState(1);
@@ -448,13 +468,13 @@ const AdminDashboard = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {orders.map((order) => (
+                  {order.map((od) => (
                     <tr
-                      key={order.id}
+                      key={od._id}
                       className="border-b hover:bg-gray-50 transition"
                     >
-                      <td className="px-4 py-3">{order.customer}</td>
-                      <td className="px-4 py-3">{order.total}</td>
+                      <td className="px-4 py-3">{od.fullname}</td>
+                      <td className="px-4 py-3">{od.totalAmount}</td>
                       <td className="px-4 py-3">
                         <span
                           className={`px-3 py-1 rounded-full text-sm font-medium ${
@@ -463,7 +483,7 @@ const AdminDashboard = () => {
                               : "bg-yellow-100 text-yellow-600"
                           }`}
                         >
-                          {order.status}
+                          {od.status}
                         </span>
                       </td>
                     </tr>

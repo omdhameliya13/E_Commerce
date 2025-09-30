@@ -454,46 +454,52 @@ const AdminDashboard = () => {
   </>
 )}
 
-        {/* Orders */}
-        {activeTab === "orders" && (
-          <>
-            <h1 className="text-3xl font-bold mb-6">Manage Orders</h1>
-            <div className="overflow-x-auto bg-white rounded-lg shadow-md">
-              <table className="w-full table-auto">
-                <thead className="bg-blue-600 text-white">
-                  <tr>
-                    <th className="px-4 py-3 text-left">Customer</th>
-                    <th className="px-4 py-3 text-left">Total</th>
-                    <th className="px-4 py-3 text-left">Status</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {order.map((od) => (
-                    <tr
-                      key={od._id}
-                      className="border-b hover:bg-gray-50 transition"
-                    >
-                      <td className="px-4 py-3">{od.fullname}</td>
-                      <td className="px-4 py-3">{od.totalAmount}</td>
-                      <td className="px-4 py-3">
-                        <span
-                          className={`px-3 py-1 rounded-full text-sm font-medium ${
-                            order.status === "Completed"
-                              ? "bg-green-100 text-green-600"
-                              : "bg-yellow-100 text-yellow-600"
-                          }`}
-                        >
-                          {od.status}
-                        </span>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </>
-        )}
-        
+       {/* Orders */}
+{activeTab === "orders" && (
+  <>
+    <h1 className="text-3xl font-bold mb-6">Manage Orders</h1>
+    <div className="overflow-x-auto bg-white rounded-lg shadow-md">
+      <table className="w-full table-auto">
+        <thead className="bg-blue-600 text-white">
+          <tr>
+            <th className="px-4 py-3 text-left">Customer</th>
+            <th className="px-4 py-3 text-left">Artist</th>   {/* NEW */}
+            <th className="px-4 py-3 text-left">Product</th>  {/* NEW */}
+            <th className="px-4 py-3 text-left">Qty</th>      {/* NEW */}
+            <th className="px-4 py-3 text-left">Total</th>
+            <th className="px-4 py-3 text-left">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {order.map((od) => (
+            <tr
+              key={od._id}
+              className="border-b hover:bg-gray-50 transition"
+            >
+              <td className="px-4 py-3">{od.fullname}</td>
+              <td className="px-4 py-3">{od.artistName || "N/A"}</td>     {/* NEW */}
+              <td className="px-4 py-3">{od.productName || "N/A"}</td>    {/* NEW */}
+              <td className="px-4 py-3">{od.quantity || 1}</td>           {/* NEW */}
+              <td className="px-4 py-3">₹{od.totalAmount}</td>
+              <td className="px-4 py-3">
+                <span
+                  className={`px-3 py-1 rounded-full text-sm font-medium ${
+                    od.status === "Completed"
+                      ? "bg-green-100 text-green-600"
+                      : "bg-yellow-100 text-yellow-600"
+                  }`}
+                >
+                  {od.status}
+                </span>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </>
+)}
+
         {
           activeTab==="settings" &&(
             <>

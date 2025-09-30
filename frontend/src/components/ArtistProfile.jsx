@@ -6,16 +6,16 @@ import { useNavigate } from "react-router-dom";
 const ArtistProfile = () => {
   const navigate = useNavigate();
   const [artist, setArtist] = useState(null);
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem("token");
+
   useEffect(() => {
-    
     const fetchArtist = async () => {
       try {
         const res = await axios.get(
           "http://localhost:5000/api/v1/artist/profile/getProfile",
-           {
-            headers:{Authorization:`Bearer ${token}`}
-           }
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
         );
         setArtist(res.data);
       } catch (error) {
@@ -27,12 +27,10 @@ const ArtistProfile = () => {
   }, []);
 
   const handleLogout = () => {
-    
-    localStorage.removeItem('token');
+    localStorage.removeItem("token");
     setArtist(null);
     toast.success("Logged out successfully");
     navigate("/login-artist");
-    
   };
 
   const handleLogin = () => {
@@ -40,8 +38,20 @@ const ArtistProfile = () => {
     toast.success("Redirecting to login...");
   };
 
+  const handleBack = () => {
+    navigate("/artistdashboard");
+  };
+
   return (
     <div className="max-w-sm mx-auto mt-10 p-6 bg-white rounded-xl shadow-md text-center">
+      {/* Back Button */}
+      <button
+        onClick={handleBack}
+        className="mb-4 bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded-lg transition"
+      >
+        ← Back
+      </button>
+
       <h2 className="text-2xl font-semibold text-gray-800 mb-6">My Profile</h2>
 
       {artist ? (

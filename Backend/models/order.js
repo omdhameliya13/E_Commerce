@@ -16,14 +16,7 @@ const orederSchema = new mongoose.Schema({
             type:Number,
             required:true
         },
-        /*price:{
-            type:Number,
-            required:true
-        },
-        total:{
-            type:Number,
-            required:true
-        }*/
+        
     }],
     totalAmount:{
         type:Number,
@@ -72,7 +65,8 @@ const orederSchema = new mongoose.Schema({
     createdAt: {
         type: Date,
         default: Date.now
-    }
+    },
+    
 })
 
 const Order = mongoose.model("Order",orederSchema);

@@ -16,13 +16,9 @@ import {useNavigate} from 'react-router-dom';
 import toast from "react-hot-toast";
 const AdminDashboard = () => {
   const navigate = useNavigate();
+  const token = localStorage.getItem('token');
   const [activeTab, setActiveTab] = useState("dashboard");
 
-  const orders = [
-    { id: 1, customer: "John Doe", total: "₹5000", status: "Pending" },
-    { id: 2, customer: "Jane Smith", total: "₹3000", status: "Completed" },
-    { id: 3, customer: "Mike Ross", total: "₹2000", status: "Pending" },
-  ];
 
   const [order,setOrder] = useState([]);
 
@@ -38,17 +34,17 @@ const AdminDashboard = () => {
         
       } catch (error) {
         console.log(error.res?.data?.error);
-        toast.error("Faild to Fetch Error");
+        toast.error("Faild to Fetch Orders");
       }
     }
     fetchOrder();
-  },[activeTab])
+  },[activeTab,token])
 
   const [artist,setArtist] = useState([]);
   const [page,setPage] = useState(1);
   const [totalPages,setTotalPages] = useState(1);
   const [filter,setFilter] = useState("all");
-  const token = localStorage.getItem('token');
+
 
     useEffect(()=>{
     const fetchArtist = async()=>{
@@ -463,37 +459,44 @@ const AdminDashboard = () => {
         <thead className="bg-blue-600 text-white">
           <tr>
             <th className="px-4 py-3 text-left">Customer</th>
-            <th className="px-4 py-3 text-left">Artist</th>   {/* NEW */}
-            <th className="px-4 py-3 text-left">Product</th>  {/* NEW */}
-            <th className="px-4 py-3 text-left">Qty</th>      {/* NEW */}
+            <th className="px-4 py-3 text-left">Artist</th>   
+            <th className="px-4 py-3 text-left">Product</th>  
+            <th className="px-4 py-3 text-left">Qty</th>      
             <th className="px-4 py-3 text-left">Total</th>
             <th className="px-4 py-3 text-left">Status</th>
           </tr>
         </thead>
         <tbody>
-          {order.map((od) => (
-            <tr
-              key={od._id}
-              className="border-b hover:bg-gray-50 transition"
-            >
-              <td className="px-4 py-3">{od.fullname}</td>
-              <td className="px-4 py-3">{od.artistName || "N/A"}</td>     {/* NEW */}
-              <td className="px-4 py-3">{od.productName || "N/A"}</td>    {/* NEW */}
-              <td className="px-4 py-3">{od.quantity || 1}</td>           {/* NEW */}
-              <td className="px-4 py-3">₹{od.totalAmount}</td>
-              <td className="px-4 py-3">
-                <span
-                  className={`px-3 py-1 rounded-full text-sm font-medium ${
-                    od.status === "Completed"
-                      ? "bg-green-100 text-green-600"
-                      : "bg-yellow-100 text-yellow-600"
-                  }`}
-                >
-                  {od.status}
-                </span>
+          {order.length > 0 ? (
+            order.map((od) =>
+              od.products.map((p) => (
+                <tr key={p.productId._id} className="border-b hover:bg-gray-50 transition">
+                  <td className="px-4 py-3">{od.fullname}</td>
+                  <td className="px-4 py-3">{p.productId.artistId?.name || "N/A"}</td>
+                  <td className="px-4 py-3">{p.productId.name}</td>
+                  <td className="px-4 py-3">{p.quantity}</td>
+                  <td className="px-4 py-3">₹{p.productId.price * p.quantity}</td>
+                  <td className="px-4 py-3">
+                    <span
+                      className={`px-3 py-1 rounded-full text-sm font-medium ${
+                        od.status === "Completed"
+                          ? "bg-green-100 text-green-600"
+                          : "bg-yellow-100 text-yellow-600"
+                      }`}
+                    >
+                      {od.status}
+                    </span>
+                  </td>
+                </tr>
+              ))
+            )
+          ) : (
+            <tr>
+              <td colSpan="6" className="text-center py-6 text-gray-500">
+                🚫 No orders found
               </td>
             </tr>
-          ))}
+          )}
         </tbody>
       </table>
     </div>

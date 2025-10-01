@@ -5,14 +5,9 @@ import axios from "axios";
 import toast from "react-hot-toast";
 
 const AllOrders = () => {
-  const orders = [
-    { code: "SHOE-001", company: "Nike", qty: 2, price: 2500, total: 5000, status: "Complete" },
-    { code: "SHOE-002", company: "Adidas", qty: 1, price: 3000, total: 3000, status: "Pending" },
-    { code: "SHOE-003", company: "Puma", qty: 3, price: 2000, total: 6000, status: "Complete" },
-    { code: "SHOE-004", company: "Reebok", qty: 1, price: 3500, total: 3500, status: "Pending" },
-  ];
+  
 
-  const [order,setOrders] = useState([]);
+  /*const [order,setOrders] = useState([]);
   const token = localStorage.getItem('token');
   useEffect = (()=>{
     const fetchOrders = async() =>{
@@ -32,7 +27,7 @@ const AllOrders = () => {
       }
     }
     fetchOrders();
-  },[token])
+  },[token])*/
 
   return (
     <div className="min-h-screen bg-gray-100 p-8">

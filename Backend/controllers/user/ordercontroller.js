@@ -3,6 +3,7 @@ const Order = require('../../models/order');
 const Cart = require("../../models/cart");
 const Product = require("../../models/product");
 
+
 const createOrder = async(req,res)=>{
     try {
         const userId = req.user.id;
@@ -23,7 +24,7 @@ const createOrder = async(req,res)=>{
             userId,
             products : cart.products.map(product=>({
                 productId : product.productId._id,
-                quantity : product.quantity
+                quantity : product.quantity,
             })),
             totalAmount,
             fullname,

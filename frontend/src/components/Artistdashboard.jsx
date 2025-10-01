@@ -8,7 +8,7 @@ const Artistdashboard = () => {
   const token = localStorage.getItem("token");
   const [artist, setArtist] = useState(null);
   const [products, setProduct] = useState([]);
-  const [activeTab, setActiveTab] = useState("products"); // 👈 switch view
+  const [activeTab, setActiveTab] = useState("products"); 
 
   useEffect(() => {
     const fetchArtist = async () => {
@@ -36,6 +36,7 @@ const Artistdashboard = () => {
           "http://localhost:5000/api/v1/artist/product/getProduct",
           { headers: { Authorization: `Bearer ${token}` } }
         );
+        
         setProduct(Array.isArray(res.data) ? res.data : []);
       } catch (error) {
         console.log(error.response?.data?.error || error.message);
@@ -100,6 +101,22 @@ const Artistdashboard = () => {
       status: "Completed",
     },
   ];
+  const [order,setOrder] = useState([]);
+  useEffect(()=>{
+    const fetchOrder = async()=>{
+      try {
+        const res = await axios.get("http://localhost:5000/api/v1/artist/orders/getOrders",{
+          headers:{Authorization:`Bearer ${token}`}
+        })
+        console.log(res.data);
+        setOrder(res.data);
+      } catch (error) {
+        console.log(error.res?.data?.error);
+        toast.error("Error to Fetch Orders");
+      }
+    }
+    fetchOrder();
+  },[token,activeTab]);
 
   return (
     <div className="flex min-h-screen bg-gray-100">
@@ -123,6 +140,7 @@ const Artistdashboard = () => {
         {/* Sales Orders */}
         <button
           className="flex items-center justify-between w-full p-3 rounded-lg hover:bg-blue-100 transition"
+          onClick={() => setActiveTab("orders")}
         >
           <span className="flex items-center gap-3">
             <Package size={20} />
@@ -131,26 +149,7 @@ const Artistdashboard = () => {
           <ChevronDown size={20} />
         </button>
 
-        <div className="ml-8 mt-2 flex flex-col gap-2">
-          <button
-            onClick={() => setActiveTab("orders")}
-            className="text-gray-600 hover:text-blue-600 transition text-sm text-left"
-          >
-            All Orders
-          </button>
-          <button
-            onClick={() => setActiveTab("pending")}
-            className="text-gray-600 hover:text-blue-600 transition text-sm text-left"
-          >
-            Pending Orders
-          </button>
-          <button
-            onClick={() => setActiveTab("completed")}
-            className="text-gray-600 hover:text-blue-600 transition text-sm text-left"
-          >
-            Completed Orders
-          </button>
-        </div>
+       
 
         {/* Profile */}
         <div className="mt-4">
@@ -245,41 +244,53 @@ const Artistdashboard = () => {
                 </tr>
               </thead>
               <tbody>
-                {orders.map((order) => (
-                  <tr key={order.id} className="border-b hover:bg-gray-50">
-                    <td className="px-4 py-3">{order.customer}</td>
-                    <td className="px-4 py-3 flex items-center gap-3">
-                      <img
-                        src={order.productImg}
-                        alt={order.productName}
-                        className="w-12 h-12 rounded-md object-cover"
-                      />
-                      <span>{order.productName}</span>
-                    </td>
-                    <td className="px-4 py-3 text-center">{order.qty}</td>
-                    <td className="px-4 py-3 text-center">₹{order.price}</td>
-                    <td className="px-4 py-3 text-center font-semibold">₹{order.total}</td>
-                    <td className="px-4 py-3">{order.address}</td>
-                    <td className="px-4 py-3 text-sm">
-                      <p>{order.phone}</p>
-                      <p className="text-gray-500">{order.email}</p>
-                    </td>
-                    <td className="px-4 py-3 text-center">{order.city}</td>
-                    <td className="px-4 py-3 text-center">{order.pincode}</td>
-                    <td className="px-4 py-3 text-center">{order.state}</td>
-                    <td className="px-4 py-3 text-center">{order.paymentMethod}</td>
-                    <td className="px-4 py-3 text-center">
-                      {order.status === "Completed" ? (
-                        <button className="px-3 py-1 bg-green-100 text-green-600 rounded-full text-sm font-medium">
-                          Completed
-                        </button>
-                      ) : (
-                        <button className="px-3 py-1 bg-yellow-100 text-yellow-600 rounded-full text-sm font-medium">
-                          Pending
-                        </button>
-                      )}
-                    </td>
-                  </tr>
+                {order.map((od) => (
+                  od.products.map((product, index) => (
+                    <tr key={product._id} className="border-b hover:bg-gray-50">
+                      <td className="px-4 py-3">{od.fullname}</td>
+
+                      <td className="px-4 py-3 flex items-center gap-3">
+                        <img
+                          src={product.productId.image?`http://localhost:5000/${product.productId.image}`:null}
+                          alt={product.productId.name}
+                          className="w-12 h-12 rounded-md object-cover"
+                        />
+                        <span>{product.productId.name}</span>
+                      </td>
+
+                      <td className="px-4 py-3 text-center">{product.quantity}</td>
+
+                      <td className="px-4 py-3 text-center">₹{product.productId.price}</td>
+
+                      <td className="px-4 py-3 text-center font-semibold">
+                        ₹{od.totalAmount}
+                      </td>
+
+                      <td className="px-4 py-3">{od.address}</td>
+
+                      <td className="px-4 py-3 text-sm">
+                        <p>{od.mobileno}</p>
+                        <p className="text-gray-500">{od.email}</p>
+                      </td>
+
+                      <td className="px-4 py-3 text-center">{od.city}</td>
+                      <td className="px-4 py-3 text-center">{od.pincode}</td>
+                      <td className="px-4 py-3 text-center">{od.state}</td>
+                      <td className="px-4 py-3 text-center">{od.paymentMethod}</td>
+
+                      <td className="px-4 py-3 text-center">
+                        {od.status === "Completed" ? (
+                          <button className="px-3 py-1 bg-green-100 text-green-600 rounded-full text-sm font-medium">
+                            Completed
+                          </button>
+                        ) : (
+                          <button className="px-3 py-1 bg-yellow-100 text-yellow-600 rounded-full text-sm font-medium">
+                            Pending
+                          </button>
+                        )}
+                      </td>
+                    </tr>
+                  ))
                 ))}
               </tbody>
             </table>

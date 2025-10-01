@@ -4,6 +4,7 @@ const Order = require('../../models/order');
 const getPendingOrder = async(req,res)=>{
     try {
         const orders = await Order.find().populate("products.productId");
+        console.log(orders);
         return res.status(200).json(orders);
     } catch (error) {
         console.error("Error fetching orders:", error);

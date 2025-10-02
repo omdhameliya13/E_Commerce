@@ -279,16 +279,20 @@ const Artistdashboard = () => {
                       <td className="px-4 py-3 text-center">{od.paymentMethod}</td>
 
                       <td className="px-4 py-3 text-center">
-                        {od.status === "Completed" ? (
-                          <button className="px-3 py-1 bg-green-100 text-green-600 rounded-full text-sm font-medium">
-                            Completed
-                          </button>
-                        ) : (
-                          <button className="px-3 py-1 bg-yellow-100 text-yellow-600 rounded-full text-sm font-medium">
-                            Pending
-                          </button>
-                        )}
-                      </td>
+                         <button
+                           onClick={(e) => {
+                             // toggle status UI only
+                             e.target.innerText === "Confirm"
+                               ? ((e.target.innerText = "Completed"),
+                                 e.target.classList.remove("bg-yellow-100", "text-yellow-600"),
+                                 e.target.classList.add("bg-green-100", "text-green-600"))
+                               : null;
+                           }}
+                           className="px-3 py-1 bg-yellow-100 text-yellow-600 rounded-full text-sm font-medium"
+                        >
+                           Confirm
+                         </button>
+                       </td>
                     </tr>
                   ))
                 ))}

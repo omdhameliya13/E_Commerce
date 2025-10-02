@@ -20,7 +20,7 @@ import Cart from './components/Cart';
 import Order from './components/Order'
 import OrderPlaced from './components/OrderPlaced';
 import ArtistProfile from './components/ArtistProfile';
-
+import Orders from "./components/Orders"
 
 function App() {
   return (
@@ -52,6 +52,7 @@ function App() {
         <Route path="/pendingorders" element={<Pendingorders/>} />
         <Route path="/completeorders" element={<Completeorders/>} />
         <Route path="/order" element={<Order/>} />
+        <Route path="/orders" element={<Orders />} />
 
         
         {/* cart page */}

@@ -1,186 +1,190 @@
-import React,{useState,useEffect} from 'react';
+import React, { useState, useEffect } from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import { Link ,useNavigate} from "react-router-dom";
-import axios from 'axios';
-import toast from 'react-hot-toast';
-
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 const Homeuser = () => {
   const settings = {
     dots: true,
     infinite: true,
-    speed: 200,
+    speed: 300,
     slidesToShow: 3,
-    slidesToScroll: 3
-    };
+    slidesToScroll: 3,
+    arrows: true,
+  };
 
-    const navigate = useNavigate();
+  const navigate = useNavigate();
+  const [product, setProduct] = useState([]);
+  const token = localStorage.getItem("token");
 
-    const[product,setProduct] = useState([]);
-    const token = localStorage.getItem('token');
-    useEffect(()=>{
-      const fetchProduct = async()=>{
-        try {
-          const res = await axios.get("http://localhost:5000/api/v1/user/product/getProduct");
-          console.log(res.data);
-          setProduct(res.data);
-        } catch (error) {
-          console.log(error.res?.data?.error);
-          toast.error("Faild to fetch product");
-        }
-
-      }
-      fetchProduct();
-    },[]);
-
-    const handleAddToCart = async(productId)=>{
+  useEffect(() => {
+    const fetchProduct = async () => {
       try {
-        const res = await axios.post('http://localhost:5000/api/v1/user/cart/addToCart',{productId,quantity :1},
-        {headers:{Authorization:`Bearer ${token}`}}
-        )
-        toast.success("Added to Cart")
-        navigate('/cart')
+        const res = await axios.get(
+          "http://localhost:5000/api/v1/user/product/getProduct"
+        );
+        setProduct(res.data);
       } catch (error) {
-        console.log((error.res?.data?.error))
-        toast.error(error.res?.data?.error)
+        console.log(error.res?.data?.error);
+        toast.error("Failed to fetch products");
       }
+    };
+    fetchProduct();
+  }, []);
 
+  const handleAddToCart = async (productId) => {
+    try {
+      await axios.post(
+        "http://localhost:5000/api/v1/user/cart/addToCart",
+        { productId, quantity: 1 },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      toast.success("Added to Cart");
+      navigate("/cart");
+    } catch (error) {
+      console.log(error.res?.data?.error);
+      toast.error(error.res?.data?.error);
     }
-
-    
+  };
 
   return (
-    <div>
-      <header>
-        <div className="header-container flex justify-evenly bg-slate-800 text-white">
-    <div className="shrink order-1">FREE DELIVERY ON ORDERS OVER Rs.2999</div>
-    <div className="order-2 flex p-2 items-center gap-6">
-      {/* Profile Icon */}
-      <div className="flex p-1">
-        <Link to="/user-profile">
-        <button>
-          <ion-icon name="person-circle" class="text-3xl"></ion-icon>
-        </button>
-        </Link>
-      </div>
-
-      {/* Cart Icon */}
-      <div className="flex p-1">
-        <Link to="/cart">
-        <button>
-          <ion-icon name="cart" class="text-2xl"></ion-icon>
-        </button>
-        </Link>
-      </div>
-    </div>
-  </div>
-      </header>
-      <nav className='flex justify-between items-center w-[92%]'>
-        <div className=''>
-              <img src="/photos/logo.png" alt="logo" class="relative h-40 w-60"/>
-        </div>
-        <div className='nav-links md:static absolute bg-white md:min-h-fit min-h-[60vh] left-0 top-[-100%] md:w-auto w-full flex-iteam-center px-5'>
-          <ul className='flex md:flex-row flex-col md:iteam-center md:gap-[4vw] gap-8'>
-            <li><a className='hover:text-slate-800' href="#">HOME</a></li>
-            <li><a className='hover:text-slate-800' href="#">PRODUCT</a></li>
-            <li><a className='hover:text-slate-800' href="#">CONTACT</a></li>
-            <li><a className='hover:text-slate-800' href="#">TEAM</a></li>
-            <li><a className='hover:text-slate-800' href="#">HELP</a></li>
-          </ul>
+    <div className="bg-gray-50 min-h-screen">
+      {/* Top Bar */}
+      <div className="flex justify-between items-center px-6 py-4 bg-white shadow-sm">
+        <div className="flex items-center gap-4">
+          <img src="/photos/logo.png" alt="Logo" className="h-16 w-auto" />
+          <input
+            type="text"
+            placeholder="Search products..."
+            className="px-3 py-1.5 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400 text-sm w-64"
+          />
         </div>
 
-        <div className='flex items-center gap-6'>
-          <ion-icon  name="menu" class="text-3x1 cursor-pointer md:hidden"></ion-icon>
-        
-        <div className='flex items-center gap-6'>
-          <div className="hidden md:block">
-            <input
-                type="text"
-                placeholder="Search products..."
-                className="px-4 py-2 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-slate-500"
-            />
+        {/* Right Icons */}
+        <div className="flex items-center gap-6">
+          {/* Profile */}
+          <Link to="/user-profile">
+            <ion-icon
+              name="person-circle"
+              class="text-3xl text-gray-700 hover:text-blue-500 transition"
+            ></ion-icon>
+          </Link>
+
+          {/* Cart */}
+          <Link to="/cart" className="relative">
+            <ion-icon
+              name="cart"
+              class="text-2xl text-gray-700 hover:text-blue-500 transition"
+            ></ion-icon>
+            <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-1.5 py-0.5 rounded-full">
+              0
+            </span>
+          </Link>
+
+          {/* Your Orders */}
+          <Link to="/orders">
+            <button className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm transition">
+              Your Orders
+            </button>
+          </Link>
+        </div>
+      </div>
+
+      {/* Banner */}
+      <div className="relative w-full h-64 mb-12">
+        <img
+          src="/photos/banner.jpg"
+          className="w-full h-full object-cover rounded-lg"
+          alt="banner"
+        />
+        <div className="absolute inset-0 flex flex-col justify-center items-center bg-black bg-opacity-30 text-white">
+          <h1 className="text-3xl font-bold mb-2">Welcome to Our Store</h1>
+          <p className="text-sm">Discover the best products for your home</p>
+        </div>
+      </div>
+
+      {/* Top Trends */}
+      <div className="px-6 mb-6">
+        <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center border-b-2 border-blue-500 pb-2">
+          Top Trends
+        </h2>
+      </div>
+
+      {/* Product Slider */}
+      <div className="px-6 mb-16">
+        <Slider {...settings}>
+          {product.map((p) => (
+            <div key={p._id} className="px-3">
+              <div className="bg-white rounded-lg p-4 flex flex-col items-center hover:shadow-lg transform hover:scale-105 transition">
+                <img
+                  src={p.image ? `http://localhost:5000/${p.image}` : null}
+                  alt={p.name}
+                  className="w-36 h-36 object-cover rounded-lg mb-3"
+                />
+                <h3 className="text-lg font-semibold text-gray-800">{p.name}</h3>
+                <p className="text-blue-600 font-bold mb-1">₹{p.price}</p>
+                <p className="text-gray-500 text-sm text-center mb-3">
+                  {p.description}
+                </p>
+                <button
+                  onClick={() => handleAddToCart(p._id)}
+                  className="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white px-4 py-2 rounded-full text-sm transition"
+                >
+                  Add to Cart
+                </button>
+              </div>
+            </div>
+          ))}
+        </Slider>
+      </div>
+
+      {/* Footer */}
+      <footer className="bg-gray-900 text-gray-300 py-12">
+        <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-8">
+          <div>
+            <h4 className="font-bold text-white mb-4">About Us</h4>
+            <p className="text-sm">
+              We provide the best home decor and apparel with fast delivery and
+              top-notch customer service.
+            </p>
+          </div>
+          <div>
+            <h4 className="font-bold text-white mb-4">Quick Links</h4>
+            <ul className="space-y-2 text-sm">
+              <li><a href="#" className="hover:text-blue-500">Home</a></li>
+              <li><a href="#" className="hover:text-blue-500">Products</a></li>
+              <li><a href="#" className="hover:text-blue-500">Contact</a></li>
+              <li><a href="#" className="hover:text-blue-500">Help</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4 className="font-bold text-white mb-4">Customer Service</h4>
+            <ul className="space-y-2 text-sm">
+              <li><a href="#" className="hover:text-blue-500">FAQ</a></li>
+              <li><a href="#" className="hover:text-blue-500">Shipping & Returns</a></li>
+              <li><a href="#" className="hover:text-blue-500">Terms & Conditions</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4 className="font-bold text-white mb-4">Contact Us</h4>
+            <p className="text-sm mb-2">Email: support@example.com</p>
+            <p className="text-sm mb-2">Phone: +91 12345 67890</p>
+            <div className="flex gap-3">
+              <a href="#" className="hover:text-blue-500">Facebook</a>
+              <a href="#" className="hover:text-blue-500">Instagram</a>
+              <a href="#" className="hover:text-blue-500">Twitter</a>
+            </div>
           </div>
         </div>
-      </div>
-    </nav>
-      <div>
-        <img src="/photos/banner.jpg" class="w-full h-full object-cover" alt="banner"/>
-      </div>
-
-      <div className='p-8'>
-  <h1 className='text-2xl text-center font-bold border-4 border-solid border-black p-3'>Top Trends</h1>
-</div>
-
-<div className='p-14'>
-  <Slider {...settings}>
-    {product.map((p) => (
-      <div key={p._id} className="px-5">
-        <div className='border-2 border-solid border-black rounded-md p-4 flex flex-col items-center'>
-          <img src={p.image ? `http://localhost:5000/${p.image}` : null} alt={p.name} className="w-40 h-40 object-cover mb-4 rounded-md"/>
-          <h2 className="text-lg font-bold">{p.name}</h2>
-          <p className="text-gray-700 font-semibold">{p.price}</p>
-          <p className="text-gray-500 text-sm text-center mb-3">{p.description}</p>
-          <button onClick={()=>handleAddToCart(p._id)} className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition">
-            Add to Cart
-          </button>
+        <div className="text-center text-gray-500 mt-6 text-sm">
+          &copy; 2025 All Rights Reserved
         </div>
-      </div>
-    ))}
-  </Slider>
-</div>
-
-    <footer className="bg-gray-800 text-white mt-16">
-  <div className="max-w-7xl mx-auto px-6 py-10 grid grid-cols-1 md:grid-cols-4 gap-8">
-    {/* About */}
-    <div>
-      <h2 className="font-bold text-lg mb-4">About Us</h2>
-      <p className="text-gray-300 text-sm">
-        We provide the best Home decor and apparel with fast delivery and top-notch customer service.
-      </p>
-    </div>
-
-    {/* Quick Links */}
-    <div>
-      <h2 className="font-bold text-lg mb-4">Quick Links</h2>
-      <ul className="text-gray-300 text-sm space-y-2">
-        <li><a href="#" className="hover:text-blue-400">Home</a></li>
-        <li><a href="#" className="hover:text-blue-400">Products</a></li>
-        <li><a href="#" className="hover:text-blue-400">Contact</a></li>
-        <li><a href="#" className="hover:text-blue-400">Help</a></li>
-      </ul>
-    </div>
-
-    {/* Customer Service */}
-    <div>
-      <h2 className="font-bold text-lg mb-4">Customer Service</h2>
-      <ul className="text-gray-300 text-sm space-y-2">
-        <li><a href="#" className="hover:text-blue-400">FAQ</a></li>
-        <li><a href="#" className="hover:text-blue-400">Shipping & Returns</a></li>
-        <li><a href="#" className="hover:text-blue-400">Terms & Conditions</a></li>
-      </ul>
-    </div>
-
-    {/* Contact Info */}
-    <div>
-      <h2 className="font-bold text-lg mb-4">Contact Us</h2>
-      <p className="text-gray-300 text-sm mb-2">Email: support@example.com</p>
-      <p className="text-gray-300 text-sm mb-2">Phone: +91 12345 67890</p>
-      <div className="flex gap-3 mt-2">
-        <a href="#" className="hover:text-blue-400">Facebook</a>
-        <a href="#" className="hover:text-blue-400">Instagram</a>
-        <a href="#" className="hover:text-blue-400">Twitter</a>
-      </div>
-    </div>
-  </div>
-
-  <div className="bg-gray-900 text-gray-400 text-center py-4 text-sm">
-    &copy; copyright @ 2025
-  </div>
-</footer>
-
+      </footer>
     </div>
   );
 };
-export default Homeuser; 
+
+export default Homeuser;

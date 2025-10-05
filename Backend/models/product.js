@@ -30,7 +30,7 @@ const productSchema = new mongoose.Schema({
   size:{
     type:String
   },
-  artistId: { 
+  artist: { 
     type: mongoose.Schema.Types.ObjectId,
     ref: "Artist", 
     required: true 

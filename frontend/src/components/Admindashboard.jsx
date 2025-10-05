@@ -21,24 +21,29 @@ const AdminDashboard = () => {
 
 
   const [order,setOrder] = useState([]);
+  const [orderPage,setOrderPage] = useState(1);
+  const [totalOrderPage,setTotalOrderPage]= useState(1);
 
   useEffect(()=>{
     const fetchOrder= async()=>{
       try {
-        const res = await axios.get("http://localhost:5000/api/v1/admin/orders/getOrders",{
+        const res = await axios.get(`http://localhost:5000/api/v1/admin/orders/getOrders/?page=${orderPage}&limit=10`,{
           headers:{Authorization:`Bearer ${token}`}
         })
         console.log(res.data);
         toast.success("Order Fetch Successfully");
-        setOrder(res.data);
+        setTotalOrderPage(res.data.totalPages);
+        setOrder(res.data.orders);
+        
         
       } catch (error) {
         console.log(error.res?.data?.error);
         toast.error("Faild to Fetch Orders");
+        setOrder([]);
       }
     }
     fetchOrder();
-  },[activeTab,token])
+  },[activeTab,token,orderPage])
 
   const [artist,setArtist] = useState([]);
   const [page,setPage] = useState(1);
@@ -105,7 +110,7 @@ const AdminDashboard = () => {
   useEffect(()=>{
     const fetchProduct = async()=>{
       try {
-        const res = await axios.get(`http://localhost:5000/api/v1/admin/manageProduct/getAllProduct/?productPage=${productPage}&limit=5&productfilter=${productfilter}`,{
+        const res = await axios.get(`http://localhost:5000/api/v1/admin/manageProduct/getAllProduct/?page=${productPage}&limit=5&filter=${productfilter}`,{
           headers:{
             Authorization: `Bearer ${token}`,
           }
@@ -120,7 +125,7 @@ const AdminDashboard = () => {
       }
     }
     fetchProduct();
-  },[activeTab,token,page,productfilter]);
+  },[activeTab,token,productPage,productfilter]);
 
   const handleApprove = async(id)=>{
     try {
@@ -451,57 +456,78 @@ const AdminDashboard = () => {
 )}
 
        {/* Orders */}
-{activeTab === "orders" && (
-  <>
-    <h1 className="text-3xl font-bold mb-6">Manage Orders</h1>
-    <div className="overflow-x-auto bg-white rounded-lg shadow-md">
-      <table className="w-full table-auto">
-        <thead className="bg-blue-600 text-white">
-          <tr>
-            <th className="px-4 py-3 text-left">Customer</th>
-            <th className="px-4 py-3 text-left">Artist</th>   
-            <th className="px-4 py-3 text-left">Product</th>  
-            <th className="px-4 py-3 text-left">Qty</th>      
-            <th className="px-4 py-3 text-left">Total</th>
-            <th className="px-4 py-3 text-left">Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          {order.length > 0 ? (
-            order.map((od) =>
-              od.products.map((p) => (
-                <tr key={p.productId._id} className="border-b hover:bg-gray-50 transition">
-                  <td className="px-4 py-3">{od.fullname}</td>
-                  <td className="px-4 py-3">{p.productId.artistId?.name || "N/A"}</td>
-                  <td className="px-4 py-3">{p.productId.name}</td>
-                  <td className="px-4 py-3">{p.quantity}</td>
-                  <td className="px-4 py-3">₹{p.productId.price * p.quantity}</td>
-                  <td className="px-4 py-3">
-                    <span
-                      className={`px-3 py-1 rounded-full text-sm font-medium ${
-                        od.status === "Completed"
-                          ? "bg-green-100 text-green-600"
-                          : "bg-yellow-100 text-yellow-600"
-                      }`}
-                    >
-                      {od.status}
-                    </span>
-                  </td>
-                </tr>
-              ))
-            )
-          ) : (
-            <tr>
-              <td colSpan="6" className="text-center py-6 text-gray-500">
-                🚫 No orders found
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </table>
-    </div>
-  </>
-)}
+        {activeTab === "orders" && (
+          <>
+            <h1 className="text-3xl font-bold mb-6">Manage Orders</h1>
+
+            <div className="overflow-x-auto bg-white rounded-lg shadow-md">
+              <table className="w-full table-auto">
+                <thead className="bg-blue-600 text-white">
+                  <tr>
+                    <th className="px-4 py-3 text-left">Customer</th>
+                    <th className="px-4 py-3 text-left">Artist</th>   
+                    <th className="px-4 py-3 text-left">Product</th>  
+                    <th className="px-4 py-3 text-left">Qty</th>      
+                    <th className="px-4 py-3 text-left">Total</th>
+                    <th className="px-4 py-3 text-left">Status</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  {order.length > 0 ? (
+                    order.map((od) =>
+                      od.products.map((p) => (
+                        <tr key={p.productId?._id || `${orderIndex}-${index}`} className="border-b hover:bg-gray-50 transition">
+                          <td className="px-4 py-3">{od.fullname || "N/A"}</td>
+                          <td className="px-4 py-3">{p.productId?.artist?.name || "N/A"}</td>
+                          <td className="px-4 py-3">{p.productId?.name || "N/A"}</td>
+                          <td className="px-4 py-3">{p.quantity || 0}</td>
+                          <td className="px-4 py-3">₹{(p.productId?.price || 0) * (p.quantity || 0)}</td>
+                          <td className="px-4 py-3">
+                            <span className={`px-3 py-1 rounded-full text-sm font-medium ${
+                              od.status === "Completed" 
+                                ? "bg-green-100 text-green-600" 
+                                : "bg-yellow-100 text-yellow-600"
+                            }`}>
+                              {od.status || "Pending"}
+                            </span>
+                          </td>
+                        </tr>
+                      ))
+                    )
+                  ) : (
+                    <tr>
+                      <td colSpan="6" className="text-center py-6 text-gray-500">
+                        🚫 No orders found
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Pagination */}
+            <div className="flex justify-center items-center gap-4 mt-6">
+              <button
+                disabled={orderPage === 1}
+                onClick={() => setOrderPage((p) => p - 1)}
+                className={`px-4 py-2 rounded-lg shadow ${orderPage === 1 ? "bg-gray-300 cursor-not-allowed" : "bg-blue-500 text-white hover:bg-blue-600"}`}
+              >
+                Previous
+              </button>
+
+              <span>{orderPage} of {totalOrderPage}</span>
+
+              <button
+                disabled={orderPage === totalOrderPage}
+                onClick={() => setOrderPage((p) => p + 1)}
+                className={`px-4 py-2 rounded-lg shadow ${orderPage === totalOrderPage ? "bg-gray-300 cursor-not-allowed" : "bg-blue-500 text-white hover:bg-blue-600"}`}
+              >
+                Next
+              </button>
+            </div>
+          </>
+        )}
 
         {
           activeTab==="settings" &&(

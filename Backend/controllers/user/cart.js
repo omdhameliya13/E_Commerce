@@ -5,6 +5,9 @@ const Product = require('../../models/product')
 const addToCart = async(req,res)=>{
     try {
         const userId = req.user.id;
+        if(!userId){
+            return res.status(400).status("Login First");
+        }
         const {productId,quantity} = req.body;
 
         const productData = await Product.findById(productId);
@@ -28,7 +31,13 @@ const addToCart = async(req,res)=>{
         for(const p of cart.products){
             subTotal = subTotal+p.total;
         }
-        cart.subTotal = subTotal+199;
+        if(subTotal>2999){
+            cart.subTotal = subTotal;
+        }
+        else{
+            cart.subTotal = subTotal + 199;
+        }
+        
         await cart.save();
         return res.status(200).json({message:"Product added successfully",cart});
     } catch (error) {
@@ -59,13 +68,19 @@ const removeFromCart = async(req,res)=>{
         if(!cart){
             return res.status(404).json({message:"Your cart is empty"});
         }
-        cart.products = cart.products.filter(product=>product.productId.toString() !== productId);
+        cart.products = cart.products.filter((product)=>product.productId._id.toString() !== productId);
 
         let subTotal = 0;
         for(const p of cart.products){
+            p.total = p.price * p.quantity;
             subTotal = subTotal+p.total;
         }
-        cart.subTotal = subTotal;
+        if(subTotal>2999){
+            cart.subTotal = subTotal;
+        }
+        else{
+            cart.subTotal = subTotal + 199;
+        }
         await cart.save();
         return res.status(200).json({message:"Product Removed from Cart",cart});
     } catch (error) {
@@ -103,7 +118,12 @@ const updateCart = async (req, res) => {
     for(const p of cart.products){
         subTotal = subTotal+p.total;
     }
-    cart.subTotal = subTotal;
+    if(subTotal>2999){
+            cart.subTotal = subTotal;
+    }
+    else{
+        cart.subTotal = subTotal + 199;
+    }
 
     await cart.save();
 

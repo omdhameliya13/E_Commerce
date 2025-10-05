@@ -5,6 +5,7 @@ import toast from "react-hot-toast";
 
 export default function Order() {
   const navigate = useNavigate();
+  
   const [formData, setFormData] = useState({
     fullname: "",
     mobileno: "",
@@ -21,7 +22,12 @@ export default function Order() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
     const token = localStorage.getItem("token");
+    if(!token){
+      navigate("/login-user");
+      toast.error("Please Login First");
+    }
     try {
       const res = await axios.post(
         "http://localhost:5000/api/v1/user/order/createOrder",

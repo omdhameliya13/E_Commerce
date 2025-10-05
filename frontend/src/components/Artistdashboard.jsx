@@ -64,52 +64,19 @@ const Artistdashboard = () => {
     }
   };
 
-  // Dummy orders for UI only
-  const orders = [
-    {
-      id: 1,
-      customer: "John Doe",
-      productImg: "https://via.placeholder.com/60",
-      productName: "Handmade Vase",
-      qty: 2,
-      price: 500,
-      total: 1000,
-      address: "123 Main Street",
-      phone: "9876543210",
-      email: "john@example.com",
-      city: "Mumbai",
-      pincode: "400001",
-      state: "Maharashtra",
-      paymentMethod: "Online",
-      status: "Pending",
-    },
-    {
-      id: 2,
-      customer: "Alice Smith",
-      productImg: "https://via.placeholder.com/60",
-      productName: "Painting",
-      qty: 1,
-      price: 2000,
-      total: 2000,
-      address: "456 Park Avenue",
-      phone: "9123456780",
-      email: "alice@example.com",
-      city: "Delhi",
-      pincode: "110001",
-      state: "Delhi",
-      paymentMethod: "Cash on Delivery",
-      status: "Completed",
-    },
-  ];
+  
   const [order,setOrder] = useState([]);
+  const [orderPage,setOrderPage] = useState(1);
+  const [totalOrderPage,setTotalOrderPage] = useState(1);
   useEffect(()=>{
     const fetchOrder = async()=>{
       try {
-        const res = await axios.get("http://localhost:5000/api/v1/artist/orders/getOrders",{
+        const res = await axios.get(`http://localhost:5000/api/v1/artist/orders/getOrders/?page=${orderPage}&limit=10`,{
           headers:{Authorization:`Bearer ${token}`}
         })
         console.log(res.data);
-        setOrder(res.data);
+        setTotalOrderPage(res.data.totalPages);
+        setOrder(res.data.orders);
       } catch (error) {
         console.log(error.res?.data?.error);
         toast.error("Error to Fetch Orders");
@@ -117,6 +84,22 @@ const Artistdashboard = () => {
     }
     fetchOrder();
   },[token,activeTab]);
+
+  const handleConfirm = async(id)=>{
+    try {
+      const res = await axios.put(`http://localhost:5000/api/v1/artist/orders/completeOrder/${id}`,{},{
+        headers:{Authorization:`Bearer ${token}`}
+      })
+
+      setOrder((prev)=>prev.map((p)=>p._id===p.id ? { ...p,status:"Completed"}:p));
+      toast.success("Order Confirmed Successfully");
+    } catch (error) {
+      console.log(error.res?.data?.error);
+      toast.error("Faild to Confirm Order");
+    }
+  }
+
+  
 
   return (
     <div className="flex min-h-screen bg-gray-100">
@@ -225,6 +208,7 @@ const Artistdashboard = () => {
         )}
 
         {activeTab === "orders" && (
+          <>
           <div className="overflow-x-auto bg-white shadow-md rounded-lg">
             <table className="min-w-full border border-gray-200">
               <thead className="bg-blue-100">
@@ -244,61 +228,96 @@ const Artistdashboard = () => {
                 </tr>
               </thead>
               <tbody>
-                {order.map((od) => (
-                  od.products.map((product, index) => (
-                    <tr key={product._id} className="border-b hover:bg-gray-50">
-                      <td className="px-4 py-3">{od.fullname}</td>
+                {order.length === 0 ? (
+                  <tr>
+                    <td
+                      colSpan="12"
+                      className="text-center py-6 text-gray-500 font-medium"
+                    >
+                      No orders found
+                    </td>
+                  </tr>
+                ) : (
+                  order.map((od) =>
+                    od.products.map((product, index) => (
+                      <tr key={product._id || index} className="border-b hover:bg-gray-50">
+                        <td className="px-4 py-3">{od.fullname}</td>
 
-                      <td className="px-4 py-3 flex items-center gap-3">
-                        <img
-                          src={product.productId.image?`http://localhost:5000/${product.productId.image}`:null}
-                          alt={product.productId.name}
-                          className="w-12 h-12 rounded-md object-cover"
-                        />
-                        <span>{product.productId.name}</span>
-                      </td>
+                        <td className="px-4 py-3 flex items-center gap-3">
+                          <img
+                            src={
+                              product.productId.image
+                                ? `http://localhost:5000/${product.productId.image}`
+                                : null
+                            }
+                            alt={product.productId.name}
+                            className="w-12 h-12 rounded-md object-cover"
+                          />
+                          <span>{product.productId.name}</span>
+                        </td>
 
-                      <td className="px-4 py-3 text-center">{product.quantity}</td>
+                        <td className="px-4 py-3 text-center">{product.quantity}</td>
+                        <td className="px-4 py-3 text-center">
+                          ₹{product.productId.price}
+                        </td>
+                        <td className="px-4 py-3 text-center font-semibold">
+                          ₹{od.totalAmount}
+                        </td>
+                        <td className="px-4 py-3">{od.address}</td>
+                        <td className="px-4 py-3 text-sm">
+                          <p>{od.mobileno}</p>
+                          <p className="text-gray-500">{od.email}</p>
+                        </td>
+                        <td className="px-4 py-3 text-center">{od.city}</td>
+                        <td className="px-4 py-3 text-center">{od.pincode}</td>
+                        <td className="px-4 py-3 text-center">{od.state}</td>
+                        <td className="px-4 py-3 text-center">{od.paymentMethod}</td>
 
-                      <td className="px-4 py-3 text-center">₹{product.productId.price}</td>
-
-                      <td className="px-4 py-3 text-center font-semibold">
-                        ₹{od.totalAmount}
-                      </td>
-
-                      <td className="px-4 py-3">{od.address}</td>
-
-                      <td className="px-4 py-3 text-sm">
-                        <p>{od.mobileno}</p>
-                        <p className="text-gray-500">{od.email}</p>
-                      </td>
-
-                      <td className="px-4 py-3 text-center">{od.city}</td>
-                      <td className="px-4 py-3 text-center">{od.pincode}</td>
-                      <td className="px-4 py-3 text-center">{od.state}</td>
-                      <td className="px-4 py-3 text-center">{od.paymentMethod}</td>
-
-                      <td className="px-4 py-3 text-center">
-                         <button
-                           onClick={(e) => {
-                             // toggle status UI only
-                             e.target.innerText === "Confirm"
-                               ? ((e.target.innerText = "Completed"),
-                                 e.target.classList.remove("bg-yellow-100", "text-yellow-600"),
-                                 e.target.classList.add("bg-green-100", "text-green-600"))
-                               : null;
-                           }}
-                           className="px-3 py-1 bg-yellow-100 text-yellow-600 rounded-full text-sm font-medium"
-                        >
-                           Confirm
-                         </button>
-                       </td>
-                    </tr>
-                  ))
-                ))}
+                        <td className="px-4 py-3 text-center">
+                          {od.status === "Completed" ? (
+                            <span className="px-3 py-2 rounded-full text-sm font-medium bg-green-100 text-green-700">
+                              Completed
+                            </span>
+                          ) : (
+                            <button
+                              onClick={() => {
+                                handleConfirm(od._id);
+                              }}
+                              className="px-3 py-1 bg-blue-500 hover:bg-green-400 text-white rounded-lg"
+                            >
+                              Confirm
+                            </button>
+                          )}
+                        </td>
+                      </tr>
+                    ))
+                  )
+                )}
               </tbody>
             </table>
           </div>
+          
+          <div className="flex justify-center items-center gap-4 mt-6">
+              <button
+                disabled={orderPage === 1}
+                onClick={() => setOrderPage((p) => p - 1)}
+                className={`px-4 py-2 rounded-lg shadow ${orderPage === 1 ? "bg-gray-300 cursor-not-allowed" : "bg-blue-500 text-white hover:bg-blue-600"}`}
+              >
+                Previous
+              </button>
+
+              <span>{orderPage} of {totalOrderPage}</span>
+
+              <button
+                disabled={orderPage === totalOrderPage}
+                onClick={() => setOrderPage((p) => p + 1)}
+                className={`px-4 py-2 rounded-lg shadow ${orderPage === totalOrderPage ? "bg-gray-300 cursor-not-allowed" : "bg-blue-500 text-white hover:bg-blue-600"}`}
+              >
+                Next
+              </button>
+            </div>
+        </>         
+          
         )}
       </div>
     </div>

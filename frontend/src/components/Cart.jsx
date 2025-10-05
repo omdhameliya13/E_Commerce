@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link,useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 export default function Cart() {
   const token = localStorage.getItem("token");
@@ -75,8 +75,17 @@ const handleCart = async (productId, newQty,stock) => {
     0
   );
 
-  const shipping = subtotal > 0 ? 199 : 0;
+  const shipping = subtotal > 2999 ? 0 : (subtotal > 0 ?199:0);
   const total = subtotal + shipping;
+
+  const navigate = useNavigate();
+  const handleCheckout = () =>{
+    if (items.length === 0) {
+      toast.error("No product selected");
+      return;
+    }
+    navigate("/order");
+  }
   
 
   return (
@@ -146,11 +155,11 @@ const handleCart = async (productId, newQty,stock) => {
             <span>Total</span>
             <span>₹{total}</span>
           </div>
-          <Link to="/order">
-            <button className="w-full mt-6 bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-lg shadow transition">
+          
+            <button onClick={handleCheckout} className="w-full mt-6 bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-lg shadow transition">
               Proceed to Checkout
             </button>
-          </Link>
+          
         </div>
       </div>
     </div>

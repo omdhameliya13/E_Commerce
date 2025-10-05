@@ -24,9 +24,9 @@ const Homeuser = () => {
     const fetchProduct = async () => {
       try {
         const res = await axios.get(
-          "http://localhost:5000/api/v1/user/product/getProduct"
+          `http://localhost:5000/api/v1/user/product/getProduct`
         );
-        setProduct(res.data);
+        setProduct(res.data.products);
       } catch (error) {
         console.log(error.res?.data?.error);
         toast.error("Failed to fetch products");
@@ -37,6 +37,11 @@ const Homeuser = () => {
 
   const handleAddToCart = async (productId) => {
     try {
+      if(!token){
+        toast.error("Login First");
+        navigate("/login-user");
+        return;
+      }
       await axios.post(
         "http://localhost:5000/api/v1/user/cart/addToCart",
         { productId, quantity: 1 },
@@ -45,8 +50,16 @@ const Homeuser = () => {
       toast.success("Added to Cart");
       navigate("/cart");
     } catch (error) {
-      console.log(error.res?.data?.error);
-      toast.error(error.res?.data?.error);
+      if (error.response?.status === 401) {
+        toast.error("Login First");
+        localStorage.removeItem("token"); // optional: clear invalid token
+        navigate("/login-user");
+      }
+      else{
+        console.log(error.res?.data?.error);
+        toast.error(error.res?.data?.error);
+      }
+      
     }
   };
 
@@ -141,7 +154,6 @@ const Homeuser = () => {
         </Slider>
       </div>
 
-      {/* Footer */}
       <footer className="bg-gray-900 text-gray-300 py-12">
         <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-8">
           <div>

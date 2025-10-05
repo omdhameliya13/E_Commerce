@@ -16,8 +16,13 @@ const orederSchema = new mongoose.Schema({
             type:Number,
             required:true
         },
+        artist: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Artist", 
+        },
         
     }],
+    
     totalAmount:{
         type:Number,
         default:0

@@ -14,24 +14,30 @@ export default function Order() {
     city: "",
     pincode: "",
     state: "",
-    payment: "",
+    paymentMethod: "",
   });
 
   const handleChange = (e) =>
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-
+    
+  setFormData({ ...formData, [e.target.name]: e.target.value });
+  
   const handleSubmit = async (e) => {
+    
     e.preventDefault();
     
     const token = localStorage.getItem("token");
-    
+    if( !formData.fullname || !formData.mobileno || !formData.email || !formData.address || !formData.city || !formData.pincode || !formData.state || !formData.paymentMethod) {
+        toast.error('All fields are required');
+        retu
+      }
     try {
       if(!token){
         navigate("/login-user");
         toast.error("Please Login First");
         return;
       }
-      const res = await axios.post(
+      
+        const res = await axios.post(
         "http://localhost:5000/api/v1/user/order/createOrder",
         formData,
         {
@@ -155,9 +161,9 @@ export default function Order() {
                 <label className="flex items-center gap-3 cursor-pointer">
                   <input
                     type="radio"
-                    name="payment"
-                    value="cod"
-                    checked={formData.payment === "cod"}
+                    name="paymentMethod"
+                    value="COD"
+                    checked={formData.paymentMethod === "COD"}
                     onChange={handleChange}
                     className="h-5 w-5 text-green-600 focus:ring-green-500"
                   />
@@ -167,9 +173,9 @@ export default function Order() {
                 <label className="flex items-center gap-3 cursor-pointer">
                   <input
                     type="radio"
-                    name="payment"
-                    value="upi"
-                    checked={formData.payment === "upi"}
+                    name="paymentMethod"
+                    value="Online"
+                    checked={formData.paymentMethod === "Online"}
                     onChange={handleChange}
                     className="h-5 w-5 text-green-600 focus:ring-green-500"
                   />

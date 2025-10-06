@@ -12,7 +12,6 @@ import AllOrders from './components/Allorders';
 import Admindashboard from './components/Admindashboard';
 import Adminlogin from './components/Adminlogin';
 import Adminsignup from './components/Adminsignup';
-import Pendingorders from './components/Pendingorders';
 import Completeorders from './components/Completeorders'
 import ArtistUpdate from './components/ArtistUpdate';
 import Userprofile from './components/Userprofile';
@@ -49,7 +48,6 @@ function App() {
         <Route path="/adminsignup" element={<Adminsignup/>} />
 
         {/* Orders */}
-        <Route path="/pendingorders" element={<Pendingorders/>} />
         <Route path="/completeorders" element={<Completeorders/>} />
         <Route path="/order" element={<Order/>} />
         <Route path="/orders" element={<Orders />} />

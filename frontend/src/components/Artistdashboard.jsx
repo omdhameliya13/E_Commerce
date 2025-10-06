@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { ChevronDown, Package, PlusCircle, LogOut, User } from "lucide-react";
 import axios from "axios";
 import toast from "react-hot-toast";
+import e from "cors";
 
 const Artistdashboard = () => {
   const token = localStorage.getItem("token");
@@ -95,7 +96,7 @@ const Artistdashboard = () => {
       }
     }
     fetchOrder();
-  },[token,activeTab]);
+  },[token,activeTab,orderPage]);
 
   const handleConfirm = async(id)=>{
     try {
@@ -103,11 +104,12 @@ const Artistdashboard = () => {
         toast.error("token not found, Login first");
         return;
       }
+      
       const res = await axios.put(`http://localhost:5000/api/v1/artist/orders/completeOrder/${id}`,{},{
         headers:{Authorization:`Bearer ${token}`}
       })
 
-      setOrder((prev)=>prev.map((p)=>p._id===p.id ? { ...p,status:"Completed"}:p));
+      setOrder((prev)=>prev.map((p)=>p._id=== id ? { ...p,status:"Completed"}:p));
       toast.success("Order Confirmed Successfully");
     } catch (error) {
       console.log(error.res?.data?.error);

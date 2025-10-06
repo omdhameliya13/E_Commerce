@@ -14,11 +14,13 @@ const Artist = () => {
       e.preventDefault();
       if (!formData.name || !formData.description || !formData.category || !formData.price || !formData.image || !formData.stock) {
         //return toast.error('All fields are required');
-        toast.success('All fields are required');
+        toast.error('All fields are required');
       }
       const token = localStorage.getItem("token");
       if(!token){
         toast.error("Login again");
+        navigate('/artistlogin');
+        return;
       }
       try {
           const data = new FormData();

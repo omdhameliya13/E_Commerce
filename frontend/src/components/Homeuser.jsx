@@ -42,6 +42,7 @@ const Homeuser = () => {
         navigate("/login-user");
         return;
       }
+      
       await axios.post(
         "http://localhost:5000/api/v1/user/cart/addToCart",
         { productId, quantity: 1 },
@@ -142,11 +143,17 @@ const Homeuser = () => {
                 <p className="text-gray-500 text-sm text-center mb-3">
                   {p.description}
                 </p>
+                {p.stock <= 0 && (
+                    <span className="ml-2 px-2 py-1 bg-red-100 text-red-600 rounded text-xs font-semibold">
+                      Out of Stock
+                    </span>
+                )}
                 <button
                   onClick={() => handleAddToCart(p._id)}
+                  disabled={p.stock <= 0}
                   className="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white px-4 py-2 rounded-full text-sm transition"
                 >
-                  Add to Cart
+                  {p.stock === 0 ? "Out of Stock" : "Add to Cart"}
                 </button>
               </div>
             </div>

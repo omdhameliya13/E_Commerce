@@ -16,6 +16,10 @@ const createOrder = async (req, res) => {
       state,
       paymentMethod,
     } = req.body;
+    console.log(req.body);
+    if (!fullname || !mobileno || !email || !address || !city || !pincode || !state || !paymentMethod) {
+      return res.status(400).json({ message: "All fields are required" });
+    }
 
     // fetch user's cart with product details
     const cart = await Cart.findOne({ userId }).populate("products.productId");
@@ -23,12 +27,38 @@ const createOrder = async (req, res) => {
       return res.status(404).json({ message: "Cart is empty" });
     }
 
+    for (const item of cart.products) {
+      const product = await Product.findById(item.productId._id);
+
+      if (!product) {
+        return res.status(404).json({ message: `Product not found: ${item.productId._id}` });
+      }
+
+      // if out of stock or not enough stock
+      if (product.stock < item.quantity) {
+        return res.status(400).json({ 
+          message: `${product.name} is out of stock or insufficient quantity available` 
+        });
+      }
+    }
+
     // calculate total amount
     let totalAmount = 0;
     cart.products.forEach((product) => {
       totalAmount += product.productId.price * product.quantity;
     });
-    totalAmount = totalAmount + 199; // delivery charges, for example
+    if(totalAmount<2999){
+      totalAmount = totalAmount + 0;
+    }
+    totalAmount = totalAmount + 199; // delivery charges
+    
+    for (const item of cart.products) {
+      await Product.findByIdAndUpdate(
+        item.productId._id,
+        { $inc: { stock: -item.quantity } }, // reduce stock
+        { new: true }
+      );
+    }
 
     // map products and attach artist to each product
     const productsWithArtist = await Promise.all(
@@ -61,8 +91,6 @@ const createOrder = async (req, res) => {
     });
 
     await newOrder.save();
-
-    // clear user's cart
     cart.products = [];
     await cart.save();
 

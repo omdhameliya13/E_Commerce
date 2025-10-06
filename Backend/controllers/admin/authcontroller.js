@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 app.use(express.json());
-const User = require('../../models/user')
+const User = require('../../models/User')
 const GoogleUser = require('../../models/googleUser')
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');

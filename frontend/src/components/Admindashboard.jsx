@@ -27,6 +27,10 @@ const AdminDashboard = () => {
   useEffect(()=>{
     const fetchOrder= async()=>{
       try {
+        if(!token){
+          toast.error("token not found, Login first");
+          return;
+        }
         const res = await axios.get(`http://localhost:5000/api/v1/admin/orders/getOrders/?page=${orderPage}&limit=10`,{
           headers:{Authorization:`Bearer ${token}`}
         })
@@ -34,8 +38,6 @@ const AdminDashboard = () => {
         toast.success("Order Fetch Successfully");
         setTotalOrderPage(res.data.totalPages);
         setOrder(res.data.orders);
-        
-        
       } catch (error) {
         console.log(error.res?.data?.error);
         toast.error("Faild to Fetch Orders");
@@ -77,6 +79,10 @@ const AdminDashboard = () => {
 
   const handleVerify = async(id)=>{
     try {
+      if(!token){
+          toast.error("token not found, Login first");
+          return;
+        }
       const res = await axios.put(`http://localhost:5000/api/v1/admin/manageArtist/verifyArtist/${id}`,{},{
         headers:{Authorization:`Bearer ${token}`}
       });
@@ -90,6 +96,10 @@ const AdminDashboard = () => {
 
   const handleReject = async(id) =>{
     try {
+      if(!token){
+          toast.error("token not found, Login first");
+          return;
+        }
       const res = await axios.put(`http://localhost:5000/api/v1/admin/manageArtist/rejectArtist/${id}`,{},{
         headers : {Authorization : `Bearer ${token}`}
       });
@@ -110,6 +120,10 @@ const AdminDashboard = () => {
   useEffect(()=>{
     const fetchProduct = async()=>{
       try {
+        if(!token){
+          toast.error("token not found, Login first");
+          return;
+        }
         const res = await axios.get(`http://localhost:5000/api/v1/admin/manageProduct/getAllProduct/?page=${productPage}&limit=5&filter=${productfilter}`,{
           headers:{
             Authorization: `Bearer ${token}`,
@@ -129,6 +143,10 @@ const AdminDashboard = () => {
 
   const handleApprove = async(id)=>{
     try {
+      if(!token){
+          toast.error("token not found, Login first");
+          return;
+        }
       const res = await axios.put(`http://localhost:5000/api/v1/admin/manageProduct/approveProduct/${id}`,{},{
         headers:{Authorization:`Bearer ${token}`}
       });
@@ -142,6 +160,10 @@ const AdminDashboard = () => {
 
   const handleRejectProduct = async(id)=>{
     try {
+      if(!token){
+          toast.error("token not found, Login first");
+          return;
+        }
       const res = await axios.put(`http://localhost:5000/api/v1/admin/manageProduct/rejectProduct/${id}`,{},{
         headers : {Authorization : `Bearer ${token}`}
       });
@@ -158,6 +180,10 @@ const AdminDashboard = () => {
       useEffect(()=>{
           const fetchAdmin = async()=>{
               try {
+                if(!token){
+                    toast.error("token not found, Login first");
+                    return;
+                  }
                   const res = await axios.get('http://localhost:5000/api/v1/admin/profile/getProfile',{
                   headers:{Authorization:`Bearer ${token}`}
               });

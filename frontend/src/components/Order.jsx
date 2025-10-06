@@ -24,11 +24,13 @@ export default function Order() {
     e.preventDefault();
     
     const token = localStorage.getItem("token");
-    if(!token){
-      navigate("/login-user");
-      toast.error("Please Login First");
-    }
+    
     try {
+      if(!token){
+        navigate("/login-user");
+        toast.error("Please Login First");
+        return;
+      }
       const res = await axios.post(
         "http://localhost:5000/api/v1/user/order/createOrder",
         formData,
@@ -52,6 +54,11 @@ export default function Order() {
   useEffect(() => {
     const fetchCart = async () => {
       try {
+        if(!token){
+          navigate("/login-user");
+          toast.error("Please Login First");
+          return;
+        }
         const res = await axios.get(
           "http://localhost:5000/api/v1/user/cart/getCart",
           { headers: { Authorization: `Bearer ${token}` } }

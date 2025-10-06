@@ -6,10 +6,7 @@ import axios from "axios";
 const Orders = () => {
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
-  if(!token){
-    navigate("/login-user");
-    toast.error("Please Login First");
-  }
+ 
   const[orders,setOrders] = useState([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -17,6 +14,11 @@ const Orders = () => {
   useEffect(()=>{
     const fetchOrders = async()=>{
       try {
+          if(!token){
+            navigate("/login-user");
+            toast.error("Please Login First");
+            return;
+          }
         const res = await axios.get(`http://localhost:5000/api/v1/user/order/getOrder/?page=${page}&limit=10`,{
           headers:{Authorization:`Bearer ${token}`}
         });

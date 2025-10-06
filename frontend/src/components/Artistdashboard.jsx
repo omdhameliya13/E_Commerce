@@ -13,6 +13,10 @@ const Artistdashboard = () => {
   useEffect(() => {
     const fetchArtist = async () => {
       try {
+        if(!token){
+          toast.error("token not found, Login first");
+          return;
+        }
         const res = await axios.get(
           "http://localhost:5000/api/v1/artist/profile/getProfile",
           { headers: { Authorization: `Bearer ${token}` } }
@@ -52,6 +56,10 @@ const Artistdashboard = () => {
       return;
     }
     try {
+      if(!token){
+        toast.error("token not found, Login first");
+        return;
+      }
       await axios.delete(
         `http://localhost:5000/api/v1/artist/product/deleteProduct/${id}`,
         { headers: { Authorization: `Bearer ${token}` } }
@@ -71,6 +79,10 @@ const Artistdashboard = () => {
   useEffect(()=>{
     const fetchOrder = async()=>{
       try {
+        if(!token){
+          toast.error("token not found, Login first");
+          return;
+        }
         const res = await axios.get(`http://localhost:5000/api/v1/artist/orders/getOrders/?page=${orderPage}&limit=10`,{
           headers:{Authorization:`Bearer ${token}`}
         })
@@ -87,6 +99,10 @@ const Artistdashboard = () => {
 
   const handleConfirm = async(id)=>{
     try {
+      if(!token){
+        toast.error("token not found, Login first");
+        return;
+      }
       const res = await axios.put(`http://localhost:5000/api/v1/artist/orders/completeOrder/${id}`,{},{
         headers:{Authorization:`Bearer ${token}`}
       })
